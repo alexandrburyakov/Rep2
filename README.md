@@ -45,7 +45,7 @@ dd01a35078f040ca984cdd349f18d0b67e486c35 Update CHANGELOG.md
 
 225466bc3e5f35baa5d07197bbc079345b77525e Cleanup after v0.12.23 release
 
-####Команда для получения списка: git log v0.12.23..$(git log --pretty=%P -1 v0.12.24) --pretty=oneline
+#### Команда для получения списка: git log v0.12.23..$(git log --pretty=%P -1 v0.12.24) --pretty=oneline
 
 ### 5. 8c928e83589d90a031f811fae52a81be7153e82f
 Результат выполнения команды: git log -S 'func providerSource(' --pretty=%H
