@@ -258,3 +258,72 @@ nel/{ostype, hostname, osrelease, version, domainname}.
 
 ### 9. Используя -o stat для ps, определите, какой наиболее часто встречающийся статус у процессов в системе. В man ps ознакомьтесь (/PROCESS STATE CODES) что значат дополнительные к основной заглавной буквы статуса процессов. Его можно не учитывать при расчете (считать S, Ss или Ssl равнозначными).
 Наиболее часто встречающийся статус - `S`: прерываемый сон (ожидает события для завершени), а так же - `I`: неактивный процесс ядра. Дополнительные (к основной) буквы статуса процесса: < - процесс с высоким приоритетом, N - процесс с низким приоритетом, s - процесс инициировавший сессию. 
+
+# 3.4. Операционные системы, лекция 2
+### 1. На лекции мы познакомились с node_exporter. В демонстрации его исполняемый файл запускался в background. Этого достаточно для демо, но не для настоящей production-системы, где процессы должны находиться под внешним управлением. Используя знания из лекции по systemd, создайте самостоятельно простой unit-файл для node_exporter.
+Команды установки:
+```bash
+cd /opt
+sudo wget https://github.com/prometheus/node_exporter/releases/download/v1.3.0/node_exporter-1.3.0.linux-amd64.tar.gz
+sudo tar xzf node_exporter-1.3.0.linux-amd64.tar.gz
+sudo touch node_exporter-1.3.0.linux-amd64/nodex_env
+sudo touch /etc/systemd/system/nodex.service
+```
+Содержимое unit-файла (/etc/systemd/system/nodex.service):
+```TEXT
+[Unit]
+Description=node_exporter
+
+[Service]
+EnvironmentFile=/opt/node_exporter-1.3.0.linux-amd64/nodex_env
+ExecStart=/opt/node_exporter-1.3.0.linux-amd64/node_exporter $EXTRA_OPTS
+
+[Install]
+WantedBy=multi-user.target
+```
+Содержимое файла для добавления опций (/opt/node_exporter-1.3.0.linux-amd64/nodex_env):
+```TEXT
+EXTRA_OPTS="--log.level=info"
+```
+Запущенные команды:
+```TEXT
+systemctl daemon-reload - для применения настроек
+systemctl enable nodex - для добавления в автозагрузку
+systemctl start nodex - для запуска
+systemctl status nodex - для просмотра статуса
+systemctl stop nodex - для остановки.
+```
+Процесс корректно стартует, завершается, а после перезагрузки автоматически поднимается.
+
+### 2. Ознакомьтесь с опциями node_exporter и выводом /metrics по-умолчанию. Приведите несколько опций, которые вы бы выбрали для базового мониторинга хоста по CPU, памяти, диску и сети.
+CPU:
+```TEXT
+node_cpu_seconds_total{cpu="0",mode="iowait"} 34.59
+node_cpu_seconds_total{cpu="0",mode="system"} 15.86
+node_cpu_seconds_total{cpu="0",mode="user"} 12.34
+node_cpu_seconds_total{cpu="1",mode="iowait"} 27.35
+node_cpu_seconds_total{cpu="1",mode="system"} 15.33
+node_cpu_seconds_total{cpu="1",mode="user"} 10.92
+```
+Memory:
+```TEXT
+node_memory_MemAvailable_bytes 7.2894464e+08
+node_memory_MemFree_bytes 3.42368256e+08
+node_memory_MemTotal_bytes 1.028694016e+09
+node_memory_SwapFree_bytes 1.027600384e+09
+node_memory_SwapTotal_bytes 1.027600384e+09
+```
+Disk:
+```TEXT
+node_disk_io_now{device="sda"} 0
+node_disk_read_bytes_total{device="sda"} 5.14757632e+08
+node_disk_read_time_seconds_total{device="sda"} 158.163
+node_disk_write_time_seconds_total{device="sda"} 4.869
+```
+Net:
+```TEXT
+node_network_receive_bytes_total{device="eth0"} 76393
+node_network_receive_errs_total{device="eth0"} 0
+node_network_transmit_bytes_total{device="eth0"} 94528
+node_network_transmit_errs_total{device="eth0"} 0
+```
