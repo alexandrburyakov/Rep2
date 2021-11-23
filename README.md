@@ -327,3 +327,14 @@ node_network_receive_errs_total{device="eth0"} 0
 node_network_transmit_bytes_total{device="eth0"} 94528
 node_network_transmit_errs_total{device="eth0"} 0
 ```
+### 3. Установите в свою виртуальную машину Netdata. Воспользуйтесь готовыми пакетами для установки (sudo apt install -y netdata). 
+Netdata установлена. Необходимые файлы отредактированы. Порты проброшены.
+[Image](https://c.radikal.ru/c15/2111/dc/ec80dc508ef6.png)
+
+### 4. Можно ли по выводу dmesg понять, осознает ли ОС, что загружена не на настоящем оборудовании, а на системе виртуализации?
+Можно. Часть вывода `dmesg`:
+```bash
+[    0.000000] DMI: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[    0.000000] Hypervisor detected: KVM
+```
+### 5. 
