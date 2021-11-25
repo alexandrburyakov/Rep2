@@ -417,7 +417,78 @@ Calling ioctl() to re-read partition table.
 Syncing disks.
 ```
 ### 6. Соберите mdadm RAID1 на паре разделов 2 Гб.
+```bash
+root@vagrant:~# mdadm --create /dev/md0 --level=1 --raid-devices=2 /dev/sdb1 /dev/sdc1
+```
 ### 7. Соберите mdadm RAID0 на второй паре маленьких разделов.
+```bash
+root@vagrant:~# mdadm --create /dev/md1 --level=0 --raid-devices=2 /dev/sdb2 /dev/sdc2
+```
 ### 8. Создайте 2 независимых PV на получившихся md-устройствах.
-### 9. Создайте общую volume-group на этих двух PV.
+```bash
+root@vagrant:~# pvcreate /dev/md1 /dev/md0
+  Physical volume "/dev/md1" successfully created.
+  Physical volume "/dev/md0" successfully created.
+```
+### 9. Создайте общую volume-group на этих двух PV
+```bash
+root@vagrant:~# vgcreate vol_grp1 /dev/md1 /dev/md0
+  Volume group "vol_grp1" successfully created
+root@vagrant:~# vgs
+  VG        #PV #LV #SN Attr   VSize   VFree 
+  vgvagrant   1   2   0 wz--n- <63.50g     0 
+  vol_grp1    2   0   0 wz--n-  <2.99g <2.99g
+root@vagrant:~# vgdisplay
+...   
+  --- Volume group ---
+  VG Name               vol_grp1
+  System ID             
+  Format                lvm2
+  Metadata Areas        2
+  Metadata Sequence No  1
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                0
+  Open LV               0
+  Max PV                0
+  Cur PV                2
+  Act PV                2
+  VG Size               <2.99 GiB
+  PE Size               4.00 MiB
+  Total PE              765
+  Alloc PE / Size       0 / 0   
+  Free  PE / Size       765 / <2.99 GiB
+  VG UUID               mafQt8-W6Ob-Iv2K-vyds-5VJF-YeEA-mbXZnq
+```
 ### 10. Создайте LV размером 100 Мб, указав его расположение на PV с RAID0.
+```bash
+root@vagrant:~# lvcreate -L 100M -n log_vol0 vol_grp1 /dev/md1
+  Logical volume "log_vol0" created.
+root@vagrant:~# lvs
+  LV       VG        Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  root     vgvagrant -wi-ao---- <62.54g                                                    
+  swap_1   vgvagrant -wi-ao---- 980.00m                                                    
+  log_vol0 vol_grp1  -wi-a----- 100.00m 
+root@vagrant:~# lsblk
+NAME                    MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
+sda                       8:0    0   64G  0 disk  
+├─sda1                    8:1    0  512M  0 part  /boot/efi
+├─sda2                    8:2    0    1K  0 part  
+└─sda5                    8:5    0 63.5G  0 part  
+  ├─vgvagrant-root      253:0    0 62.6G  0 lvm   /
+  └─vgvagrant-swap_1    253:1    0  980M  0 lvm   [SWAP]
+sdb                       8:16   0  2.5G  0 disk  
+├─sdb1                    8:17   0    2G  0 part  
+│ └─md0                   9:0    0    2G  0 raid1 
+└─sdb2                    8:18   0  511M  0 part  
+  └─md1                   9:1    0 1018M  0 raid0 
+    └─vol_grp1-log_vol0 253:2    0  100M  0 lvm   
+sdc                       8:32   0  2.5G  0 disk  
+├─sdc1                    8:33   0    2G  0 part  
+│ └─md0                   9:0    0    2G  0 raid1 
+└─sdc2                    8:34   0  511M  0 part  
+  └─md1                   9:1    0 1018M  0 raid0 
+    └─vol_grp1-log_vol0 253:2    0  100M  0 lvm  
+```
+# 11. Создайте mkfs.ext4 ФС на получившемся LV.
