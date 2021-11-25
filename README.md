@@ -367,3 +367,57 @@ func
 [   88.898126] cgroup: fork rejected by pids controller in /user.slice/user-1000.slice/session-4.scope
 ```
 Данную величину (количество процессов на пользователя) можно поменять командой  `ulimit -u N`, где `N`  - новое значение.
+
+# 3.5. Файловые системы
+### 1. Узнайте о sparse (разряженных) файлах.
+Выполнено (изучено).
+### 2. Могут ли файлы, являющиеся жесткой ссылкой на один объект, иметь разные права доступа и владельца? Почему?
+Не могут, т.к. ссылаются на один inode, который содержит информацию о правах доступа и владельце.
+### 3. Сделайте vagrant destroy на имеющийся инстанс Ubuntu. Замените содержимое Vagrantfile следующим:... Данная конфигурация создаст новую виртуальную машину с двумя дополнительными неразмеченными дисками по 2.5 Гб.
+Добавились `sdb`, `sdc` диски.
+```bash
+vagrant@vagrant:~$ lsblk
+NAME                 MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                    8:0    0   64G  0 disk 
+├─sda1                 8:1    0  512M  0 part /boot/efi
+├─sda2                 8:2    0    1K  0 part 
+└─sda5                 8:5    0 63.5G  0 part 
+  ├─vgvagrant-root   253:0    0 62.6G  0 lvm  /
+  └─vgvagrant-swap_1 253:1    0  980M  0 lvm  [SWAP]
+sdb                    8:16   0  2.5G  0 disk 
+sdc                    8:32   0  2.5G  0 disk 
+```
+### 4. Используя fdisk, разбейте первый диск на 2 раздела: 2 Гб, оставшееся пространство.
+```bash
+root@vagrant:~# fdisk -l /dev/sdb
+Disk /dev/sdb: 2.51 GiB, 2684354560 bytes, 5242880 sectors
+Disk model: VBOX HARDDISK   
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: dos
+Disk identifier: 0x80e456f9
+
+Device     Boot   Start     End Sectors  Size Id Type
+/dev/sdb1          2048 4196351 4194304    2G 83 Linux
+/dev/sdb2       4196352 5242879 1046528  511M 83 Linux
+```
+### 5. Используя sfdisk, перенесите данную таблицу разделов на второй диск.
+```bash
+root@vagrant:~# sfdisk -d /dev/sdb > partitions-sdb
+root@vagrant:~# sfdisk /dev/sdc < partitions-sdb
+Checking that no-one is using this disk right now ... OK
+...
+Device     Boot   Start     End Sectors  Size Id Type
+/dev/sdc1          2048 4196351 4194304    2G 83 Linux
+/dev/sdc2       4196352 5242879 1046528  511M 83 Linux
+
+The partition table has been altered.
+Calling ioctl() to re-read partition table.
+Syncing disks.
+```
+### 6. Соберите mdadm RAID1 на паре разделов 2 Гб.
+### 7. Соберите mdadm RAID0 на второй паре маленьких разделов.
+### 8. Создайте 2 независимых PV на получившихся md-устройствах.
+### 9. Создайте общую volume-group на этих двух PV.
+### 10. Создайте LV размером 100 Мб, указав его расположение на PV с RAID0.
