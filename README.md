@@ -592,3 +592,129 @@ root@vagrant:~# echo $?
 ```
 ### 20. Погасите тестовый хост, vagrant destroy.
 Выполнено
+
+# 3.6. Компьютерные сети, лекция 1
+### 1. Работа c HTTP через телнет.
+```bash
+$ telnet stackoverflow.com 80
+Trying 151.101.65.69...
+Connected to stackoverflow.com.
+Escape character is '^]'.
+GET /questions HTTP/1.0
+HOST: stackoverflow.com
+
+HTTP/1.1 301 Moved Permanently
+cache-control: no-cache, no-store, must-revalidate
+location: https://stackoverflow.com/questions
+x-request-guid: b001454a-9d59-4de4-ab7a-b3b7076f9168
+feature-policy: microphone 'none'; speaker 'none'
+content-security-policy: upgrade-insecure-requests; frame-ancestors 'self' https://stackexchange.com
+Accept-Ranges: bytes
+Date: Sun, 28 Nov 2021 18:21:26 GMT
+Via: 1.1 varnish
+Connection: close
+X-Served-By: cache-fra19133-FRA
+X-Cache: MISS
+X-Cache-Hits: 0
+X-Timer: S1638123687.902163,VS0,VE92
+Vary: Fastly-SSL
+X-DNS-Prefetch-Control: off
+Set-Cookie: prov=e95a13dd-43f1-a2d5-bc2c-9a54ada54daa; domain=.stackoverflow.com; expires=Fri, 01-Jan-2055 00:00:00 GMT; path=/; HttpOnly
+
+Connection closed by foreign host.
+```
+Код от вета - `301`, что означает редирект на другой адрес (location: https://stackoverflow.com/questions).
+### 2. Повторите задание 1 в браузере, используя консоль разработчика F12
+Код ответа первого HTTP запроса - 200. Время загрузки - 1.01 с. Дольше всего обрабатывался этот же запрос - 135 мс. 
+### 3. Какой IP адрес у вас в интернете?
+Мой IP: 109.252.xx.xx Результат запроса в браузере: https://whoer.net/.
+### 4. Какому провайдеру принадлежит ваш IP адрес? Какой автономной системе AS? Воспользуйтесь утилитой whois
+```bash
+$ whois 109.252.xx.xx | grep descr
+descr:          Moscow Local Telephone Network (OAO MGTS)
+...
+$ whois 109.252.xx.xx | grep origin
+origin:         AS25513
+```
+Провайдер - Moscow Local Telephone Network (OAO MGTS). Автономная система - AS25513 
+### 5. Через какие сети проходит пакет, отправленный с вашего компьютера на адрес 8.8.8.8? Через какие AS? Воспользуйтесь утилитой traceroute
+```bash
+$ traceroute -An 8.8.8.8
+traceroute to 8.8.8.8 (8.8.8.8), 30 hops max, 60 byte packets
+ 1  10.0.2.2 [*]  0.581 ms  0.418 ms  0.319 ms
+ 2  192.168.1.1 [*]  6.292 ms  6.102 ms  5.924 ms
+ 3  100.68.0.1 [*]  6.951 ms  6.784 ms  6.681 ms
+ 4  212.188.1.106 [AS8359]  8.376 ms  8.239 ms  8.344 ms
+ 5  212.188.1.105 [AS8359]  8.469 ms  8.080 ms  8.043 ms
+ 6  212.188.56.13 [AS8359]  9.921 ms  7.953 ms  7.822 ms
+ 7  195.34.50.74 [AS8359]  7.716 ms  7.866 ms  7.720 ms
+ 8  212.188.29.82 [AS8359]  7.397 ms  7.263 ms  7.140 ms
+ 9  108.170.250.34 [AS15169]  7.895 ms  7.700 ms 108.170.250.99 [AS15169]  7.524 ms
+10  209.85.249.158 [AS15169]  22.871 ms 209.85.255.136 [AS15169]  26.212 ms  26.408 ms
+11  209.85.254.20 [AS15169]  26.245 ms 216.239.57.222 [AS15169]  22.243 ms 108.170.235.64 [AS15169]  27.519 ms
+12  172.253.51.237 [AS15169]  27.383 ms 74.125.253.147 [AS15169]  35.288 ms 216.239.47.165 [AS15169]  73.430 ms
+13  * * *
+14  * * *
+15  * * *
+16  * * *
+17  * * *
+18  * * *
+19  * * *
+20  * * *
+21  * * *
+22  * 8.8.8.8 [AS15169]  25.404 ms  25.145 ms
+```
+```bash
+$ whois AS8359 | grep as-name
+as-name:        MTS
+$ whois AS15169 | grep OrgName
+OrgName:        Google LLC
+```
+Пакет проходит через следующие AS: AS8359, AS15169. Они принадлежат МТС и Google.
+### 6. Повторите задание 5 в утилите mtr. На каком участке наибольшая задержка - delay?
+```bash
+$ mtr 8.8.8.8 -znrc 1
+Start: 2021-11-28T20:09:55+0000
+HOST: vagrant                     Loss%   Snt   Last   Avg  Best  Wrst StDev
+  1. AS???    10.0.2.2             0.0%     1    0.7   0.7   0.7   0.7   0.0
+  2. AS???    192.168.1.1          0.0%     1    5.1   5.1   5.1   5.1   0.0
+  3. AS???    100.68.0.1           0.0%     1    5.8   5.8   5.8   5.8   0.0
+  4. AS8359   212.188.1.106        0.0%     1    6.0   6.0   6.0   6.0   0.0
+  5. AS8359   212.188.1.105        0.0%     1    6.0   6.0   6.0   6.0   0.0
+  6. AS8359   212.188.56.13        0.0%     1   28.1  28.1  28.1  28.1   0.0
+  7. AS8359   195.34.50.74         0.0%     1    7.9   7.9   7.9   7.9   0.0
+  8. AS8359   212.188.29.82        0.0%     1    8.2   8.2   8.2   8.2   0.0
+  9. AS15169  108.170.250.34       0.0%     1    7.7   7.7   7.7   7.7   0.0
+ 10. AS15169  172.253.66.116       0.0%     1   23.7  23.7  23.7  23.7   0.0
+ 11. AS15169  72.14.235.69         0.0%     1   23.6  23.6  23.6  23.6   0.0
+ 12. AS15169  172.253.79.169       0.0%     1   21.9  21.9  21.9  21.9   0.0
+ 13. AS???    ???                 100.0     1    0.0   0.0   0.0   0.0   0.0
+ 14. AS???    ???                 100.0     1    0.0   0.0   0.0   0.0   0.0
+ 15. AS???    ???                 100.0     1    0.0   0.0   0.0   0.0   0.0
+ 16. AS???    ???                 100.0     1    0.0   0.0   0.0   0.0   0.0
+ 17. AS???    ???                 100.0     1    0.0   0.0   0.0   0.0   0.0
+ 18. AS???    ???                 100.0     1    0.0   0.0   0.0   0.0   0.0
+ 19. AS???    ???                 100.0     1    0.0   0.0   0.0   0.0   0.0
+ 20. AS???    ???                 100.0     1    0.0   0.0   0.0   0.0   0.0
+ 21. AS???    ???                 100.0     1    0.0   0.0   0.0   0.0   0.0
+ 22. AS15169  8.8.8.8              0.0%     1   24.9  24.9  24.9  24.9   0.0
+```
+Максимальная задержка на 6 пункте (хопе). 
+### 7. Какие DNS сервера отвечают за доменное имя dns.google? Какие A записи? воспользуйтесь утилитой dig
+```bash
+vagrant@vagrant:~$ dig NS dns.google +short
+ns3.zdns.google.
+ns1.zdns.google.
+ns2.zdns.google.
+ns4.zdns.google.
+vagrant@vagrant:~$ dig A dns.google +short 
+8.8.8.8
+8.8.4.4
+```
+### 8. Проверьте PTR записи для IP адресов из задания 7. Какое доменное имя привязано к IP? воспользуйтесь утилитой dig
+```bash
+vagrant@vagrant:~$ dig -x 8.8.8.8 +short
+dns.google.
+vagrant@vagrant:~$ dig -x 8.8.4.4 +short
+dns.google.
+```
