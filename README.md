@@ -623,7 +623,7 @@ Set-Cookie: prov=e95a13dd-43f1-a2d5-bc2c-9a54ada54daa; domain=.stackoverflow.com
 
 Connection closed by foreign host.
 ```
-Код от вета - `301`, что означает редирект на другой адрес (location: https://stackoverflow.com/questions).
+Код ответа - `301`, что означает редирект на другой адрес (location: https://stackoverflow.com/questions).
 ### 2. Повторите задание 1 в браузере, используя консоль разработчика F12
 Код ответа первого HTTP запроса - 200. Время загрузки - 1.01 с. Дольше всего обрабатывался этот же запрос - 135 мс. 
 ### 3. Какой IP адрес у вас в интернете?
