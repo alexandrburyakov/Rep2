@@ -744,8 +744,23 @@ iface wlp3s0.100 inet static
 ### 4. Какие типы агрегации интерфейсов есть в Linux? Какие опции есть для балансировки нагрузки? Приведите пример конфига.
 Типы агрегации интерфейсов в Linux:
 ```bash
+$ modinfo bonding | grep mode
+... 0 for balance-rr, 1 for active-backup, 2 for balance-xor, 3 for broadcast, 4 for 802.3ad, 5 for balance-tlb, 6 for balance-alb
 ```
-
+```Text
+active-backup и broadcast обеспечивают только отказоустойчивость
+balance-tlb, balance-alb, balance-rr, balance-xor и 802.3ad обеспечат отказоустойчивость и балансировку
+```
+Пример конфига:
+```yaml
+    bonds: 
+      bond0:
+        dhcp4: no
+        interfaces: [wlp3s0, enp4s0f1]
+        parameters:
+          mode: 802.3ad
+          mii-monitor-interval: 1
+```
 ### 5. Сколько IP адресов в сети с маской /29 ? Сколько /29 подсетей можно получить из сети с маской /24. Приведите несколько примеров /29 подсетей внутри сети 10.10.10.0/24.
 В сети с маской /29 - 8 адресов. Для хостов можно использовать 6 (за исключением широковещательного адреса и адреса сети).
 
