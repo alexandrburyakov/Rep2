@@ -780,3 +780,73 @@ Network			- 10.10.10.32     - 10.10.10.39
 Очистить ARP кеш полностью в Linux: `ip neigh flush`.
 
 Удалить из ARP таблицы только один нужный IP: `ip neigh del dev <INTERFACE> <IP>`.
+
+# 3.8. Компьютерные сети, лекция 3
+### 1. Подключитесь к публичному маршрутизатору в интернет. Найдите маршрут к вашему публичному IP: ...
+```bash
+route-views>show ip route 109.252.xx.xx 
+Routing entry for 109.252.0.0/16
+  Known via "bgp 6447", distance 20, metric 0
+  Tag 8283, type external
+  Last update from 94.142.247.3 3d12h ago
+  Routing Descriptor Blocks:
+  * 94.142.247.3, from 94.142.247.3, 3d12h ago
+      Route metric is 0, traffic share count is 1
+      AS Hops 3
+      Route tag 8283
+      MPLS label: none
+```
+### 2. Создайте dummy0 интерфейс в Ubuntu. Добавьте несколько статических маршрутов. Проверьте таблицу маршрутизации.
+Создание dummy0 интерфейса:
+```bash
+$ sudo ip link add dummy0 type dummy
+$ ip -br l
+lo               UNKNOWN        00:00:00:00:00:00 <LOOPBACK,UP,LOWER_UP> 
+eth0             UP             08:00:27:73:60:cf <BROADCAST,MULTICAST,UP,LOWER_UP> 
+dummy0           DOWN           f6:2f:e9:3c:30:39 <BROADCAST,NOARP> 
+```
+Добавление статических маршрутов:
+```bash
+# Добавление маршрута через шлюз: 
+$ sudo ip route add 192.168.5.0/24 via 10.0.2.15
+# Добавление маршрута через интерфейс: 
+$ sudo ip route add 192.168.6.0/24 dev eth0
+# Добавление маршрута через интерфейс с метрикой:
+$ sudo ip route add 192.168.7.0/24 dev eth0 metric 100
+```
+Проверка таблицы маршрутизации:
+```bash
+$ ip -br route
+default via 10.0.2.2 dev eth0 proto dhcp src 10.0.2.15 metric 100 
+10.0.2.0/24 dev eth0 proto kernel scope link src 10.0.2.15 
+10.0.2.2 dev eth0 proto dhcp scope link src 10.0.2.15 metric 100 
+192.168.5.0/24 via 10.0.2.15 dev eth0 
+192.168.6.0/24 dev eth0 scope link 
+192.168.7.0/24 dev eth0 scope link metric 100 
+```
+### 3. Проверьте открытые TCP порты в Ubuntu, какие протоколы и приложения используют эти порты? Приведите несколько примеров.
+```bash
+$ sudo ss -tnlp
+State          Recv-Q         Send-Q                 Local Address:Port                 Peer Address:Port        Process                                                          
+LISTEN         0              4096                   127.0.0.53%lo:53                        0.0.0.0:*            users:(("systemd-resolve",pid=608,fd=13))                       
+LISTEN         0              128                          0.0.0.0:22                        0.0.0.0:*            users:(("sshd",pid=958,fd=3))                                   
+LISTEN         0              4096                         0.0.0.0:111                       0.0.0.0:*            users:(("rpcbind",pid=607,fd=4),("systemd",pid=1,fd=35))        
+LISTEN         0              128                             [::]:22                           [::]:*            users:(("sshd",pid=958,fd=4))                                   
+LISTEN         0              4096                            [::]:111                          [::]:*            users:(("rpcbind",pid=607,fd=6),("systemd",pid=1,fd=37))
+```
+Порт 53 - DNS
+
+Порт 22 - SSH
+### 4. Проверьте используемые UDP сокеты в Ubuntu, какие протоколы и приложения используют эти порты?
+```bash
+$ sudo ss -unap
+State         Recv-Q         Send-Q                  Local Address:Port                 Peer Address:Port        Process                                                          
+UNCONN        0              0                       127.0.0.53%lo:53                        0.0.0.0:*            users:(("systemd-resolve",pid=608,fd=12))                       
+UNCONN        0              0                      10.0.2.15%eth0:68                        0.0.0.0:*            users:(("systemd-network",pid=419,fd=15))                       
+UNCONN        0              0                             0.0.0.0:111                       0.0.0.0:*            users:(("rpcbind",pid=607,fd=5),("systemd",pid=1,fd=36))        
+UNCONN        0              0                                [::]:111                          [::]:*            users:(("rpcbind",pid=607,fd=7),("systemd",pid=1,fd=38)) 
+```
+Порт 53 - DNS
+
+Порт 68 - DHCP
+### 5. Используя diagrams.net, создайте L3 диаграмму вашей домашней сети или любой другой сети, с которой вы работали.
