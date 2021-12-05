@@ -795,6 +795,24 @@ Routing entry for 109.252.0.0/16
       AS Hops 3
       Route tag 8283
       MPLS label: none
+route-views>show bgp 109.252.xx.xx 
+BGP routing table entry for 109.252.0.0/16, version 1391417923
+Paths: (24 available, best #13, table default)
+  Not advertised to any peer
+  Refresh Epoch 1
+  6939 8359 25513
+    64.71.137.241 from 64.71.137.241 (216.218.252.164)
+      Origin IGP, localpref 100, valid, external
+      path 7FE15B593A70 RPKI State not found
+      rx pathid: 0, tx pathid: 0
+  Refresh Epoch 3
+  3303 8359 25513
+    217.192.89.50 from 217.192.89.50 (138.187.128.158)
+      Origin IGP, localpref 100, valid, external
+      Community: 0:151 3303:1004 3303:1006 3303:1030 3303:3054 8359:100 8359:5500 8359:55277
+      path 7FE114A17770 RPKI State not found
+      rx pathid: 0, tx pathid: 0
+...
 ```
 ### 2. Создайте dummy0 интерфейс в Ubuntu. Добавьте несколько статических маршрутов. Проверьте таблицу маршрутизации.
 Создание dummy0 интерфейса:
@@ -816,7 +834,7 @@ $ sudo ip route add 192.168.7.0/24 dev eth0 metric 100
 ```
 Проверка таблицы маршрутизации:
 ```bash
-$ ip -br route
+$ ip r
 default via 10.0.2.2 dev eth0 proto dhcp src 10.0.2.15 metric 100 
 10.0.2.0/24 dev eth0 proto kernel scope link src 10.0.2.15 
 10.0.2.2 dev eth0 proto dhcp scope link src 10.0.2.15 metric 100 
@@ -850,3 +868,4 @@ UNCONN        0              0                                [::]:111          
 
 Порт 68 - DHCP
 ### 5. Используя diagrams.net, создайте L3 диаграмму вашей домашней сети или любой другой сети, с которой вы работали.
+[image1](https://a.radikal.ru/a21/2112/90/63ea3c798627.png)
