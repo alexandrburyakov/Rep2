@@ -930,5 +930,62 @@ $ ./testssl.sh -U --sneaky https://mail.ru/
  Done 2021-12-07 20:38:46 [  46s] -->> 217.69.139.202:443 (mail.ru) <<--
 ```
 ### 5. Установите на Ubuntu ssh сервер, сгенерируйте новый приватный ключ. Скопируйте свой публичный ключ на другой сервер. Подключитесь к серверу по SSH-ключу.
+Установка ssh-сервера, генерация ключей:
+```bash
+~# apt install openssh-server
+~# systemctl start sshd.service
+~# ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa): /root/.ssh/homework_rsa      
+Created directory '/root/.ssh'.
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /root/.ssh/homework_rsa.
+Your public key has been saved in /root/.ssh/homework_rsa.pub.
+The key fingerprint is:
+SHA256:XqqSZlKO4JWxS0qIf0+nrN5ORMlrTkMwpgEXMcb8lgU root@user-Aspire-F5-573G
+The key's randomart image is:
++---[RSA 2048]----+
+|.+BoE.           |
+| oo= +..         |
+|  .. o=          |
+|   .+o .         |
+|o  .+ * S .      |
+|+. =.= o o       |
+|oo++..+ +        |
+| o+.B= +         |
+|   *o=B          |
++----[SHA256]-----+
+```
+Копирование ключа на другой сервер. Подключение к серверу по SSH-ключу:
+```bash
+~# ssh-copy-id -i .ssh/homework_rsa.pub root@192.168.0.2
+~# ssh -i .ssh/homework_rsa root@192.168.0.2
+```
 ### 6. Переименуйте файлы ключей из задания 5. Настройте файл конфигурации SSH клиента, так чтобы вход на удаленный сервер осуществлялся по имени сервера.
+Переименование файлов ключей:
+```bash
+~# mv .ssh/homework_rsa .ssh/new_homework_rsa
+~# mv .ssh/homework_rsa.pub .ssh/new_homework_rsa.pub
+```
+Настройка файла конфигурации:
+```bash
+~# cat .ssh/config
+Host nas01
+     HostName 192.168.0.2
+     User root
+     IdentityFile /root/.ssh/new_homework_rsa
+```
+Подключение:
+```bash
+~# ssh nas01
+```
 ### 7. Соберите дамп трафика утилитой tcpdump в формате pcap, 100 пакетов. Откройте файл pcap в Wireshark.
+```bash
+~# tcpdump -c 100 -w dump_file.pcap
+tcpdump: listening on wlp3s0, link-type EN10MB (Ethernet), capture size 262144 bytes
+100 packets captured
+118 packets received by filter
+0 packets dropped by kernel
+```
+![](/home/user/PycharmProjects/Rep2/images/wireshark.png)
