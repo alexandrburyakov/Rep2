@@ -874,7 +874,7 @@ UNCONN        0              0                                [::]:111          
 ### 1. Установите Bitwarden плагин для браузера. Зарегестрируйтесь и сохраните несколько паролей.
 ![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/bitwarden.png)
 ### 2. Установите Google authenticator на мобильный телефон. Настройте вход в Bitwarden акаунт через Google authenticator OTP.
-![](/home/user/PycharmProjects/Rep2/images/twostepauth.png)
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/twostepauth.png)
 ### 3. Установите apache2, сгенерируйте самоподписанный сертификат, настройте тестовый сайт для работы по HTTPS.
 Все сделано в соответствии с изложенным в презентации:
 ```shell
@@ -894,8 +894,8 @@ Subject: C = RU, ST = Moscow, L = Moscow, O = Company Name, OU = Org, CN = www.e
 $ cat /var/www/homework.com/index.html
 <h1>Homework for netology</h1>
 ```
-![](/home/user/PycharmProjects/Rep2/images/localhost2.png)
-![](/home/user/PycharmProjects/Rep2/images/cert.png)
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/localhost2.png)
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/cert.png)
 ### 4. Проверьте на TLS уязвимости произвольный сайт в интернете.
 Проверка https://mail.ru/
 ```shell
@@ -988,4 +988,4 @@ tcpdump: listening on wlp3s0, link-type EN10MB (Ethernet), capture size 262144 b
 118 packets received by filter
 0 packets dropped by kernel
 ```
-![](/home/user/PycharmProjects/Rep2/images/wireshark.png)
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/wireshark.png)
