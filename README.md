@@ -872,7 +872,7 @@ UNCONN        0              0                                [::]:111          
 
 # 3.9. Элементы безопасности информационных систем.
 ### 1. Установите Bitwarden плагин для браузера. Зарегестрируйтесь и сохраните несколько паролей.
-![](/home/user/PycharmProjects/Rep2/images/bitwarden.png)
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/bitwarden.png)
 ### 2. Установите Google authenticator на мобильный телефон. Настройте вход в Bitwarden акаунт через Google authenticator OTP.
 ![](/home/user/PycharmProjects/Rep2/images/twostepauth.png)
 ### 3. Установите apache2, сгенерируйте самоподписанный сертификат, настройте тестовый сайт для работы по HTTPS.
