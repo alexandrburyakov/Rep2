@@ -1113,12 +1113,37 @@ for result in result_os.split('\n'):
 
 ### Ваш скрипт:
 ```python
-???
+#!/usr/bin/env python3
+
+import os
+import sys
+
+path = "/home/user/netology/rep1" 
+if len(sys.argv) > 1: 
+    path = sys.argv[1]
+
+bash_command = ["cd "+path, "git status 2>&1"]
+result_os = os.popen(' && '.join(bash_command)).read()
+for result in result_os.split('\n'):
+    if result.find('fatal') != -1:
+        print(path+" не GIT репозиторий")
+    elif result.find('изменено') != -1:
+        prepare_result = result.replace('\tизменено:', '').strip()
+        print(os.path.join(path, prepare_result))
 ```
 
 ### Вывод скрипта при запуске при тестировании:
 ```
-???
+$ ./script.py
+/home/user/netology/rep1/1.py
+/home/user/netology/rep1/2.py
+/home/user/netology/rep1/3.py
+/home/user/netology/rep1/readme.md
+$ ./script.py /home/user/PycharmProjects/Rep2
+/home/user/PycharmProjects/Rep2/5.py
+/home/user/PycharmProjects/Rep2/README.md
+$ ./script.py /home/user/PycharmProjects/
+/home/user/PycharmProjects/ не GIT репозиторий
 ```
 
 ## Обязательная задача 4
