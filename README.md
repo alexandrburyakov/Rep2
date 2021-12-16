@@ -1151,10 +1151,32 @@ $ ./script.py /home/user/PycharmProjects/
 
 ### Ваш скрипт:
 ```python
-???
+#!/usr/bin/env python3
+
+import socket
+import pickle
+
+# Получаем IP из предыдущей проверки в виде dictionary:
+# servs = {'drive.google.com': '74.125.131.194', 'mail.google.com': '64.233.165.18', 'google.com': '64.233.163.100'}
+with open('data.pickle', 'rb') as f:
+    servs = pickle.load(f)
+
+for host in servs.keys():
+    current_ip = socket.gethostbyname(host)
+    if current_ip == servs[host]:
+        print(f"{host} - {current_ip}")
+    else:
+        print(f"[ERROR] {host} IP mismatch: {servs[host]} {current_ip}")
+        servs[host] = current_ip
+
+with open('data.pickle', 'wb') as f:
+    pickle.dump(servs, f)
 ```
 
 ### Вывод скрипта при запуске при тестировании:
 ```
-???
+$ ./script.py
+drive.google.com - 74.125.131.194
+[ERROR] mail.google.com IP mismatch: 64.233.165.18 74.125.131.17
+[ERROR] google.com IP mismatch: 64.233.163.100 173.194.73.101
 ```
