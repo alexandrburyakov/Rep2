@@ -1360,10 +1360,46 @@ Key                 Value
 ---                 -----
 certificate         -----BEGIN CERTIFICATE-----
 MIIDuTCCAqGgAwIBAgIUCLolvKky+KPis2yw96B1aZrKHgMwDQYJKoZIhvcNAQEL
-BQAwFDESMBAGA1UEAwwJbXljZXJ0X2NhMB4XDTIyMDEwMzE0MzkwOVoXDTIyMDIw
 ...
+-----END CERTIFICATE-----
+expiration          1643812779
+issuing_ca          -----BEGIN CERTIFICATE-----
+MIIDGTCCAgGgAwIBAgIUZKjQ2vhTuMpU72+k575JdvTuvhEwDQYJKoZIhvcNAQEL
+...
+-----END CERTIFICATE-----
+private_key         -----BEGIN RSA PRIVATE KEY-----
+MIIEogIBAAKCAQEAuSNa0G5ZTShrYbWUl94kfqdlGRAY33dCjRel/kAulIyYIs+5
+...
+-----END RSA PRIVATE KEY-----
+private_key_type    rsa
+serial_number       08:ba:25:bc:a9:32:f8:a3:e2:b3:6c:b0:f7:a0:75:69:9a:ca:1e:03
 ```
+Сертификаты и ключ сохранены в файлах: `/etc/nginx/CA.crt`, `/etc/nginx/serv01.example.crt`, `/etc/nginx/serv01.example.key`. 
+#### Kорневой сертификат созданного центра сертификации установлен в доверенные в хостовой системе.
+![](/home/user/PycharmProjects/Rep2/images/dip_mycert_CA_1.png)
 ### Процесс установки и настройки сервера nginx.
+#### Установка
 ```bash
-
+vagrant@vagrant:~$ sudo apt install nginx
+...
+vagrant@vagrant:~$ systemctl status nginx
+● nginx.service - A high performance web server and a reverse proxy server
+     Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2022-01-03 14:51:05 UTC; 1s ago
+       Docs: man:nginx(8)
+    Process: 2231 ExecStartPre=/usr/sbin/nginx -t -q -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+    Process: 2242 ExecStart=/usr/sbin/nginx -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+   Main PID: 2243 (nginx)
+      Tasks: 3 (limit: 1071)
+     Memory: 3.5M
+     CGroup: /system.slice/nginx.service
+             ├─2243 nginx: master process /usr/sbin/nginx -g daemon on; master_process on;
+             ├─2244 nginx: worker process
+             └─2245 nginx: worker process
 ```
+#### Настройка
+Файл конфигурации `/etc/nginx/site-available/default` настроен следующим образом:
+![](/home/user/PycharmProjects/Rep2/images/dip_nginx_config.png)
+
+### Страница сервера nginx в браузере хоста не содержит предупреждений
+![](/home/user/PycharmProjects/Rep2/images/nginx_firefox_sshot.png)
