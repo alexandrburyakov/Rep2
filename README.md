@@ -1322,7 +1322,7 @@ Anywhere on lo             ALLOW       Anywhere
 Anywhere (v6) on lo        ALLOW       Anywhere (v6)                          
 ```
 ### Процесс установки и выпуска сертификата с помощью hashicorp vault
-####Установка vault:
+#### Установка vault:
 ```bash
 vagrant@vagrant:~$ curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
 OK
@@ -1339,7 +1339,7 @@ Common commands:
 ...
 vagrant@vagrant:~$ sudo apt-get install jq
 ```
-####Выпуск сертификата:
+#### Выпуск сертификата:
 ```bash
 root@vagrant:/home/vagrant# vault server -dev -dev-root-token-id root
 root@vagrant:/home/vagrant# export VAULT_ADDR='http://127.0.0.1:8200'
@@ -1376,7 +1376,7 @@ serial_number       08:ba:25:bc:a9:32:f8:a3:e2:b3:6c:b0:f7:a0:75:69:9a:ca:1e:03
 ```
 Сертификаты и ключ сохранены в файлах: `/etc/nginx/CA.crt`, `/etc/nginx/serv01.example.crt`, `/etc/nginx/serv01.example.key`. 
 #### Kорневой сертификат созданного центра сертификации установлен в доверенные в хостовой системе.
-![](/home/user/PycharmProjects/Rep2/images/dip_mycert_CA_1.png)
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/dip_mycert_CA_1.png)
 ### Процесс установки и настройки сервера nginx.
 #### Установка
 ```bash
@@ -1399,7 +1399,7 @@ vagrant@vagrant:~$ systemctl status nginx
 ```
 #### Настройка
 Файл конфигурации `/etc/nginx/site-available/default` настроен следующим образом:
-![](/home/user/PycharmProjects/Rep2/images/dip_nginx_config.png)
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/dip_nginx_config.png)
 
 ### Страница сервера nginx в браузере хоста не содержит предупреждений
-![](/home/user/PycharmProjects/Rep2/images/nginx_firefox_sshot.png)
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/nginx_firefox_sshot.png)
