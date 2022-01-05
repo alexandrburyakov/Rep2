@@ -1385,7 +1385,7 @@ vagrant@vagrant:~$ sudo apt install nginx
 ...
 vagrant@vagrant:~$ systemctl status nginx
 ```
-![](/home/user/PycharmProjects/Rep2/images/nginx_status_1.png)
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/nginx_status_1.png)
 #### Настройка
 Файл конфигурации `/etc/nginx/sites-available/default` настроен следующим образом:
 ![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/dip_nginx_config.png)
@@ -1423,10 +1423,10 @@ os.popen('systemctl restart nginx')
 Скрипт работает: запрашивает новый сертификат, записывает его в файл `json`, парсит этот файл, перезаписывает файлы сертификата `/etc/nginx/serv01.example.crt` и ключа `/etc/nginx/serv01.example.key`, и рестартит nginx (результат работы см. в след. пункте). 
 ### Crontab работает (выберите число и время так, чтобы показать что crontab запускается и делает что надо)
 #### Crontab настроен на запуск вышеуказанного скрипта в 13:17(+3:00), 5-го числа каждго месяца.
-![](/home/user/PycharmProjects/Rep2/images/crontab.png)
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/crontab.png)
 #### После запуска скрипта в 13:17(+3:00), 5.01.2022 файлы `/etc/nginx/serv01.example.crt` и `/etc/nginx/serv01.example.key` обновились,
-![](/home/user/PycharmProjects/Rep2/images/files_renewed.png)
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/files_renewed.png)
 #### nginx рестартовал,
-![](/home/user/PycharmProjects/Rep2/images/nginx_restart.png)
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/nginx_restart.png)
 #### страница сервера nginx в браузере хоста не содержит предупреждений.
-![](/home/user/PycharmProjects/Rep2/images/web_nginx.png)
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/web_nginx.png)
