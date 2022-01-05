@@ -1341,7 +1341,8 @@ vagrant@vagrant:~$ sudo apt-get install jq
 ```
 #### Выпуск сертификата:
 ```bash
-root@vagrant:/home/vagrant# vault server -dev -dev-root-token-id root
+root@vagrant:/home/vagrant# vault server -dev -dev-root-token-id root &
+...
 root@vagrant:/home/vagrant# export VAULT_ADDR='http://127.0.0.1:8200'
 root@vagrant:/home/vagrant# export VAULT_TOKEN=root
 root@vagrant:/home/vagrant# vault secrets enable pki
@@ -1383,20 +1384,8 @@ serial_number       08:ba:25:bc:a9:32:f8:a3:e2:b3:6c:b0:f7:a0:75:69:9a:ca:1e:03
 vagrant@vagrant:~$ sudo apt install nginx
 ...
 vagrant@vagrant:~$ systemctl status nginx
-● nginx.service - A high performance web server and a reverse proxy server
-     Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
-     Active: active (running) since Mon 2022-01-03 14:51:05 UTC; 1s ago
-       Docs: man:nginx(8)
-    Process: 2231 ExecStartPre=/usr/sbin/nginx -t -q -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
-    Process: 2242 ExecStart=/usr/sbin/nginx -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
-   Main PID: 2243 (nginx)
-      Tasks: 3 (limit: 1071)
-     Memory: 3.5M
-     CGroup: /system.slice/nginx.service
-             ├─2243 nginx: master process /usr/sbin/nginx -g daemon on; master_process on;
-             ├─2244 nginx: worker process
-             └─2245 nginx: worker process
 ```
+![](/home/user/PycharmProjects/Rep2/images/nginx_status_1.png)
 #### Настройка
 Файл конфигурации `/etc/nginx/sites-available/default` настроен следующим образом:
 ![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/dip_nginx_config.png)
@@ -1408,6 +1397,8 @@ vagrant@vagrant:~$ systemctl status nginx
 
 #### Скрипт генерации сертификата и рестарта nginx.
 ```bash
+root@vagrant:/home/vagrant# nano /home/vagrant/script_cert.py
+======================
 #!/usr/bin/env python3
 
 import json
@@ -1429,4 +1420,13 @@ with open("/etc/nginx/serv01.example.key", "w") as key_file:
 #restarting nginx
 os.popen('systemctl restart nginx')
 ```
+Скрипт работает: запрашивает новый сертификат, записывает его в файл `json`, парсит этот файл, перезаписывает файлы сертификата `/etc/nginx/serv01.example.crt` и ключа `/etc/nginx/serv01.example.key`, и рестартит nginx (результат работы см. в след. пункте). 
 ### Crontab работает (выберите число и время так, чтобы показать что crontab запускается и делает что надо)
+#### Crontab настроен на запуск вышеуказанного скрипта в 13:17(+3:00), 5-го числа каждго месяца.
+![](/home/user/PycharmProjects/Rep2/images/crontab.png)
+#### После запуска скрипта в 13:17(+3:00), 5.01.2022 файлы `/etc/nginx/serv01.example.crt` и `/etc/nginx/serv01.example.key` обновились,
+![](/home/user/PycharmProjects/Rep2/images/files_renewed.png)
+#### nginx рестартовал,
+![](/home/user/PycharmProjects/Rep2/images/nginx_restart.png)
+#### страница сервера nginx в браузере хоста не содержит предупреждений.
+![](/home/user/PycharmProjects/Rep2/images/web_nginx.png)
