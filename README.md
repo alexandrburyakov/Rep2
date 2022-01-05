@@ -1374,7 +1374,7 @@ MIIEogIBAAKCAQEAuSNa0G5ZTShrYbWUl94kfqdlGRAY33dCjRel/kAulIyYIs+5
 private_key_type    rsa
 serial_number       08:ba:25:bc:a9:32:f8:a3:e2:b3:6c:b0:f7:a0:75:69:9a:ca:1e:03
 ```
-Сертификаты и ключ сохранены в файлах: `/etc/nginx/CA.crt`, `/etc/nginx/serv01.example.crt`, `/etc/nginx/serv01.example.key`. 
+Сертификат и ключ сохранены в файлах: `/etc/nginx/serv01.example.crt`, `/etc/nginx/serv01.example.key`. 
 #### Kорневой сертификат созданного центра сертификации установлен в доверенные в хостовой системе.
 ![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/dip_mycert_CA_1.png)
 ### Процесс установки и настройки сервера nginx.
@@ -1398,8 +1398,35 @@ vagrant@vagrant:~$ systemctl status nginx
              └─2245 nginx: worker process
 ```
 #### Настройка
-Файл конфигурации `/etc/nginx/site-available/default` настроен следующим образом:
+Файл конфигурации `/etc/nginx/sites-available/default` настроен следующим образом:
 ![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/dip_nginx_config.png)
 
 ### Страница сервера nginx в браузере хоста не содержит предупреждений
 ![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/nginx_firefox_sshot.png)
+
+### Скрипт генерации нового сертификата работает (сертификат сервера ngnix должен быть "зеленым")
+
+#### Скрипт генерации сертификата и рестарта nginx.
+```bash
+#!/usr/bin/env python3
+
+import json
+import os
+
+#issuing new certs
+os.popen('vault write -format=json pki/issue/example-cert common_name="serv01.example" ttl="750h" > /home/vagrant/certificates.json')
+
+#writing new cert and key into files
+with open("/home/vagrant/certificates.json", "r") as read_file:
+    json_dict_certs = json.load(read_file)
+
+with open("/etc/nginx/serv01.example.crt", "w") as crt_file:
+    crt_file.write(json_dict_certs['data']['certificate'])
+
+with open("/etc/nginx/serv01.example.key", "w") as key_file:
+    key_file.write(json_dict_certs['data']['private_key'])
+
+#restarting nginx
+os.popen('systemctl restart nginx')
+```
+### Crontab работает (выберите число и время так, чтобы показать что crontab запускается и делает что надо)
