@@ -77,3 +77,58 @@ LXD. Содержит большую библиотеку с разными ди
 При этом не отказываясь, в определенных случаях, от использования нескольких систем виртуализации одновременно. Например, использование докер-контейнеров для микросервисов на базе ВМ. 
 
 # 5.2. Применение принципов IaaC в работе с виртуальными машинами
+### Задача 1
+```TEXT
+Опишите своими словами основные преимущества применения на практике IaaC паттернов.
+
+Ответ:
+Возможность быстро конфигурировать инфраструктуру. Удобное масштабирование. Централизованное внесение изменений,
+используя систему контроля версий, а так же возможность отката на предыдущие версии. Возможность быстрого восстановления
+инфраструктуры после выхода из строя в аварийных случаях.
+
+ ```
+```TEXT
+Какой из принципов IaaC является основополагающим?
+
+Ответ:
+Основополагающим принципом является идемпотентность. Гарания достижения необходимого состояния конфигурации.
+ ```
+### Задача 2
+```TEXT
+Чем Ansible выгодно отличается от других систем управление конфигурациями?
+
+Ответ:
+Ansible использует существующую SSH инфраструктуру, в то время как другие инструменты требуют установки
+специального PKI-окружения.
+ ```
+```TEXT
+Какой, на ваш взгляд, метод работы систем конфигурации более надёжный push или pull?
+
+Ответ:
+Push надежнее, т.к. управляет конфигурацией централизованно. Если не удастся доставить конфигурацию на сервер,
+он оповестит об этом. При методе pull возможна ситуация, когда сервер по какой-либо причине не запросит и не обновит конфигурацию.  
+ ```
+### Задача 3
+```TEXT
+Установить на личный компьютер:
+  VirtualBox
+  Vagrant
+  Ansible
+Приложить вывод команд установленных версий каждой из программ, оформленный в markdown.
+ ```
+Ответ:
+```bash
+user@user-Aspire-F5-573G:~$ vboxmanage --version
+6.1.28r147628
+user@user-Aspire-F5-573G:~$ vagrant --version
+Vagrant 2.2.19
+user@user-Aspire-F5-573G:~$ ansible --version
+/usr/lib/python2.7/dist-packages/ansible/parsing/vault/__init__.py:44: CryptographyDeprecationWarning: Python 2 is no longer supported by the Python core team. Support for it is now deprecated in cryptography, and will be removed in a future release.
+  from cryptography.exceptions import InvalidSignature
+ansible 2.9.27
+  config file = /etc/ansible/ansible.cfg
+  configured module search path = [u'/home/user/.ansible/plugins/modules', u'/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/lib/python2.7/dist-packages/ansible
+  executable location = /usr/bin/ansible
+  python version = 2.7.17 (default, Feb 27 2021, 15:10:58) [GCC 7.5.0]
+```
