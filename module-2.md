@@ -119,13 +119,11 @@ Push надежнее, т.к. управляет конфигурацией це
  ```
 Ответ:
 ```bash
-user@user-Aspire-F5-573G:~$ vboxmanage --version
+~$ vboxmanage --version
 6.1.28r147628
-user@user-Aspire-F5-573G:~$ vagrant --version
+~$ vagrant --version
 Vagrant 2.2.19
-user@user-Aspire-F5-573G:~$ ansible --version
-/usr/lib/python2.7/dist-packages/ansible/parsing/vault/__init__.py:44: CryptographyDeprecationWarning: Python 2 is no longer supported by the Python core team. Support for it is now deprecated in cryptography, and will be removed in a future release.
-  from cryptography.exceptions import InvalidSignature
+~$ ansible --version
 ansible 2.9.27
   config file = /etc/ansible/ansible.cfg
   configured module search path = [u'/home/user/.ansible/plugins/modules', u'/usr/share/ansible/plugins/modules']
@@ -201,22 +199,37 @@ Gitlab сервер для реализации CI/CD процессов и пр
 Запустите первый контейнер из образа centos c любым тэгом в фоновом режиме, подключив папку /data из
 текущей рабочей директории на хостовой машине в /data контейнера.
 ```bash
-
+user@user-Aspire-F5-573G:~$ docker run -it -d --name centos -v ~/data:/data centos
+d101125b2cd12e33e399446190d9d89372fd794a4fa3e5dcf8689d744d5e18a0
 ```
 Запустите второй контейнер из образа debian в фоновом режиме, подключив папку /data из текущей рабочей
 директории на хостовой машине в /data контейнера.
 ```bash
-
+user@user-Aspire-F5-573G:~$ docker run -it -d --name debian -v ~/data:/data debian
+92f8f35de22d4fd5a3579addceb92b981e4c2248ac5946e9ddde4bcb28ec878f
 ```
 Подключитесь к первому контейнеру с помощью docker exec и создайте текстовый файл любого содержания в /data.
 ```bash
-
+user@user-Aspire-F5-573G:~$ docker exec -it centos /bin/bash
+[root@d101125b2cd1 /]# echo "centos" > /data/centos.txt
+[root@d101125b2cd1 /]# exit
+exit
 ```
 Добавьте еще один файл в папку /data на хостовой машине.
 ```bash
-
+user@user-Aspire-F5-573G:~$ echo "host" > ~/data/host.txt
 ```
 Подключитесь во второй контейнер и отобразите листинг и содержание файлов в /data контейнера.
 ```bash
-
+user@user-Aspire-F5-573G:~$ docker exec -it debian /bin/bash
+root@92f8f35de22d:/# ls -l /data
+total 8
+-rw-r--r-- 1 root root 7 Jan 26 19:15 centos.txt
+-rw-rw-r-- 1 1000 1000 5 Jan 26 19:15 host.txt
+root@92f8f35de22d:/# cat /data/centos.txt
+centos
+root@92f8f35de22d:/# cat /data/host.txt
+host
+root@92f8f35de22d:/# exit
+exit
 ```
