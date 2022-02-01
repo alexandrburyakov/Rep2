@@ -236,7 +236,8 @@ exit
 # 5.4. Оркестрация группой Docker контейнеров на примере Docker Compose
 ### Задача 1
 Созданный с помощью Packer образ операционной системы.
-
+![](/home/user/PycharmProjects/Rep2/images/CLOUD_img_cli.png)
+![](/home/user/PycharmProjects/Rep2/images/CLOUD_img_adm.png)
 ### Задача 2
 Скриншот страницы свойств созданной ВМ.
 
