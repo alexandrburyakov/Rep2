@@ -236,11 +236,11 @@ exit
 # 5.4. Оркестрация группой Docker контейнеров на примере Docker Compose
 ### Задача 1
 Созданный с помощью Packer образ операционной системы.
-![](/home/user/PycharmProjects/Rep2/images/CLOUD_img_cli.png)
-![](/home/user/PycharmProjects/Rep2/images/CLOUD_img_adm.png)
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/CLOUD_img_cli.png)
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/CLOUD_img_adm.png)
 ### Задача 2
 Скриншот страницы свойств созданной ВМ.
-![](/home/user/PycharmProjects/Rep2/images/CLOUD_VM.png)
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/CLOUD_VM.png)
 ### Задача 3
 Скриншот работающего веб-интерфейса Grafana с текущими метриками.
-![](/home/user/PycharmProjects/Rep2/images/CLOUD_grafana.png)
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/CLOUD_grafana.png)
