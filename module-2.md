@@ -240,6 +240,7 @@ exit
 ![](/home/user/PycharmProjects/Rep2/images/CLOUD_img_adm.png)
 ### Задача 2
 Скриншот страницы свойств созданной ВМ.
-
+![](/home/user/PycharmProjects/Rep2/images/CLOUD_VM.png)
 ### Задача 3
 Скриншот работающего веб-интерфейса Grafana с текущими метриками.
+![](/home/user/PycharmProjects/Rep2/images/CLOUD_grafana.png)
