@@ -273,7 +273,9 @@ Overlay Network служит для соединения несколько де
 Создан Docker Swarm кластер в Яндекс.Облаке
 
 Скриншот из терминала (консоли), с выводом команды: `docker node ls`
+![](/home/user/PycharmProjects/Rep2/images/swarm-nodes.png)
 ### Задача 3
 Создан готовый к боевой эксплуатации кластер мониторинга, состоящий из стека микросервисов.
 
 Скриншот из терминала (консоли), с выводом команды: `docker service ls`
+![](/home/user/PycharmProjects/Rep2/images/swarm-services.png)
