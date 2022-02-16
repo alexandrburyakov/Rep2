@@ -368,20 +368,107 @@ CREATE USER "test-admin-user" WITH PASSWORD 'test1';
 В БД test_db создайте таблицу orders и clients.
 ```
 CREATE TABLE orders (id SERIAL PRIMARY KEY, naim VARCHAR(255), price INT);
-CREATE TABLE clients (id SERIAL PRIMARY KEY, last_name VARCHAR(30), country VARCHAR(30), order_id INT, FOREIGN KEY (order_id) REFERENCES orders (id));
+CREATE TABLE clients (id SERIAL PRIMARY KEY, last_name VARCHAR(30), country VARCHAR(30), 
+                      order_id INT, FOREIGN KEY (order_id) REFERENCES orders (id));
 CREATE INDEX index_country ON clients (country);
 ```
-Предоставьте привилегии на все операции пользователю test-admin-user на таблицы БД test_db
+Предоставьте привилегии на все операции пользователю test-admin-user на таблицы БД test_db.
 ```
 GRANT CONNECT ON DATABASE test_db to "test-admin-user";
 GRANT ALL ON ALL TABLES IN SCHEMA public to "test-admin-user";
 ```
-Создайте пользователя test-simple-user
+Создайте пользователя test-simple-user.
 ```
 CREATE USER "test-simple-user";
 ```
-Предоставьте пользователю test-simple-user права на SELECT/INSERT/UPDATE/DELETE данных таблиц БД test_db
+Предоставьте пользователю test-simple-user права на SELECT/INSERT/UPDATE/DELETE данных таблиц БД test_db.
 ```
 GRANT CONNECT ON DATABASE test_db to "test-simple-user";
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public to "test-simple-user";
+```
+Итоговый список БД после выполнения пунктов выше:
+```
+test_db=# \l
+                                     List of databases
+   Name    |  Owner   | Encoding |  Collate   |   Ctype    |       Access privileges       
+-----------+----------+----------+------------+------------+-------------------------------
+ netology  | netology | UTF8     | en_US.utf8 | en_US.utf8 | 
+ postgres  | netology | UTF8     | en_US.utf8 | en_US.utf8 | 
+ template0 | netology | UTF8     | en_US.utf8 | en_US.utf8 | =c/netology                  +
+           |          |          |            |            | netology=CTc/netology
+ template1 | netology | UTF8     | en_US.utf8 | en_US.utf8 | =c/netology                  +
+           |          |          |            |            | netology=CTc/netology
+ test_db   | netology | UTF8     | en_US.utf8 | en_US.utf8 | =Tc/netology                 +
+           |          |          |            |            | netology=CTc/netology        +
+           |          |          |            |            | "test-admin-user"=c/netology +
+           |          |          |            |            | "test-simple-user"=c/netology
+(5 rows)
+```
+Описание таблиц (describe):
+```
+test_db=# \d orders
+                                    Table "public.orders"
+ Column |          Type          | Collation | Nullable |              Default               
+--------+------------------------+-----------+----------+------------------------------------
+ id     | integer                |           | not null | nextval('orders_id_seq'::regclass)
+ naim   | character varying(255) |           |          | 
+ price  | integer                |           |          | 
+Indexes:
+    "orders_pkey" PRIMARY KEY, btree (id)
+Referenced by:
+    TABLE "clients" CONSTRAINT "clients_order_id_fkey" FOREIGN KEY (order_id) REFERENCES orders(id)
+```
+```
+test_db=# \d clients
+                                     Table "public.clients"
+  Column   |         Type          | Collation | Nullable |               Default               
+-----------+-----------------------+-----------+----------+-------------------------------------
+ id        | integer               |           | not null | nextval('clients_id_seq'::regclass)
+ last_name | character varying(30) |           |          | 
+ country   | character varying(30) |           |          | 
+ order_id  | integer               |           |          | 
+Indexes:
+    "clients_pkey" PRIMARY KEY, btree (id)
+    "index_country" btree (country)
+Foreign-key constraints:
+    "clients_order_id_fkey" FOREIGN KEY (order_id) REFERENCES orders(id)
+```
+SQL-запрос для выдачи списка пользователей с правами над таблицами test_db:
+```
+SELECT 
+    grantee, table_name, privilege_type 
+FROM 
+    information_schema.table_privileges 
+WHERE 
+    grantee LIKE 'te%';
+```
+Список пользователей с правами над таблицами test_db:
+```
+test_db=# SELECT grantee, table_name, privilege_type FROM information_schema.table_privileges 
+WHERE grantee LIKE 'te%';
+     grantee      | table_name | privilege_type 
+------------------+------------+----------------
+ test-admin-user  | orders     | INSERT
+ test-admin-user  | orders     | SELECT
+ test-admin-user  | orders     | UPDATE
+ test-admin-user  | orders     | DELETE
+ test-admin-user  | orders     | TRUNCATE
+ test-admin-user  | orders     | REFERENCES
+ test-admin-user  | orders     | TRIGGER
+ test-admin-user  | clients    | INSERT
+ test-admin-user  | clients    | SELECT
+ test-admin-user  | clients    | UPDATE
+ test-admin-user  | clients    | DELETE
+ test-admin-user  | clients    | TRUNCATE
+ test-admin-user  | clients    | REFERENCES
+ test-admin-user  | clients    | TRIGGER
+ test-simple-user | orders     | INSERT
+ test-simple-user | orders     | SELECT
+ test-simple-user | orders     | UPDATE
+ test-simple-user | orders     | DELETE
+ test-simple-user | clients    | INSERT
+ test-simple-user | clients    | SELECT
+ test-simple-user | clients    | UPDATE
+ test-simple-user | clients    | DELETE
+(22 rows)
 ```
