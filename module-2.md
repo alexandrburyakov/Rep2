@@ -333,3 +333,53 @@ Redis - key-value хранилище, которое имеет механизм
 Минусы: Ограничение хранилища (все данные должны поместиться в оперативной памяти). Redis предлагает
 только базовую безопасность (нет механизма ролей). Нет языка запросов (как SQL) - теряется гибкость. 
  ```
+# 6.2. SQL
+### Задача 1
+docker-compose манифест:
+```yaml
+version: "3.1"
+services:
+  postgres:
+    image: postgres:12
+    environment:
+      POSTGRES_DB: "netology"
+      POSTGRES_USER: "netology"
+      POSTGRES_PASSWORD: "test123"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    container_name: netology_psql
+    volumes:
+      - ./backup:/backup
+      - .:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: always
+```
+Запускаем и заходим в БД
+```bash
+docker-compose up -d
+docker exec -it netology_psql psql -U netology -W netology
+```
+### Задача 2
+Cоздайте пользователя test-admin-user и БД test_db.
+```
+CREATE DATABASE test_db;
+CREATE USER "test-admin-user" WITH PASSWORD 'test1';
+```
+В БД test_db создайте таблицу orders и clients.
+```
+CREATE TABLE orders (id SERIAL PRIMARY KEY, naim VARCHAR(255), price INT);
+CREATE TABLE clients (id SERIAL PRIMARY KEY, last_name VARCHAR(30), country VARCHAR(30), order_id INT, FOREIGN KEY (order_id) REFERENCES orders (id));
+CREATE INDEX index_country ON clients (country);
+```
+Предоставьте привилегии на все операции пользователю test-admin-user на таблицы БД test_db
+```
+
+```
+Создайте пользователя test-simple-user
+```
+
+```
+Предоставьте пользователю test-simple-user права на SELECT/INSERT/UPDATE/DELETE данных таблиц БД test_db
+```
+
+```
