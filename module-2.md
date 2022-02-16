@@ -373,13 +373,15 @@ CREATE INDEX index_country ON clients (country);
 ```
 Предоставьте привилегии на все операции пользователю test-admin-user на таблицы БД test_db
 ```
-
+GRANT CONNECT ON DATABASE test_db to "test-admin-user";
+GRANT ALL ON ALL TABLES IN SCHEMA public to "test-admin-user";
 ```
 Создайте пользователя test-simple-user
 ```
-
+CREATE USER "test-simple-user";
 ```
 Предоставьте пользователю test-simple-user права на SELECT/INSERT/UPDATE/DELETE данных таблиц БД test_db
 ```
-
+GRANT CONNECT ON DATABASE test_db to "test-simple-user";
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public to "test-simple-user";
 ```
