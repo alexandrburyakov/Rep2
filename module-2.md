@@ -472,3 +472,50 @@ WHERE grantee LIKE 'te%';
  test-simple-user | clients    | DELETE
 (22 rows)
 ```
+### Задача 3
+Используя SQL синтаксис - наполните таблицы следующими тестовыми данными:
+```
+INSERT INTO orders (naim, price) VALUES ('Шоколад', 10), ('Принтер', 3000), 
+('Книга', 500), ('Монитор', 7000), ('Гитара', 4000);
+```
+```
+test_db=# SELECT * FROM orders;
+ id |  naim   | price 
+----+---------+-------
+  1 | Шоколад |    10
+  2 | Принтер |  3000
+  3 | Книга   |   500
+  4 | Монитор |  7000
+  5 | Гитара  |  4000
+(5 rows)
+```
+```
+INSERT INTO clients (last_name, country) VALUES ('Иванов Иван Иванович', 'USA'), 
+('Петров Петр Петрович', 'Canada'), ('Иоганн Себастьян Бах', 'Japan'), 
+('Ронни Джеймс Дио', 'Russia'), ('Ritchie Blackmore', 'Russia');
+```
+```
+test_db=# SELECT * FROM clients;
+ id |      last_name       | country | order_id 
+----+----------------------+---------+----------
+  1 | Иванов Иван Иванович | USA     |         
+  2 | Петров Петр Петрович | Canada  |         
+  3 | Иоганн Себастьян Бах | Japan   |         
+  4 | Ронни Джеймс Дио     | Russia  |         
+  5 | Ritchie Blackmore    | Russia  |         
+(5 rows)
+```
+Вычислите количество записей для каждой таблицы:
+```
+test_db=# SELECT count(*) FROM orders;
+ count 
+-------
+     5
+(1 row)
+
+test_db=# SELECT count(*) FROM clients;
+ count 
+-------
+     5
+(1 row)
+```
