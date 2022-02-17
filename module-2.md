@@ -519,3 +519,28 @@ test_db=# SELECT count(*) FROM clients;
      5
 (1 row)
 ```
+### Задача 4
+
+Часть пользователей из таблицы clients решили оформить заказы из таблицы orders.
+Используя foreign keys свяжите записи из таблиц, согласно таблице.
+
+Приведите SQL-запросы для выполнения данных операций.
+```
+UPDATE clients SET order_id = (SELECT id FROM orders WHERE naim = 'Книга') 
+WHERE last_name = 'Иванов Иван Иванович';
+UPDATE clients SET order_id = (SELECT id FROM orders WHERE naim = 'Монитор') 
+WHERE last_name = 'Петров Петр Петрович';
+UPDATE clients SET order_id = (SELECT id FROM orders WHERE naim = 'Гитара') 
+WHERE last_name = 'Иоганн Себастьян Бах';
+```
+Приведите SQL-запрос для выдачи всех пользователей, которые совершили заказ, а также вывод данного запроса.
+```
+test_db=# SELECT c.id, c.last_name, o.naim FROM clients AS c INNER JOIN orders AS o ON o.id = c.order_id;
+ id |      last_name       |  naim   
+----+----------------------+---------
+  1 | Иванов Иван Иванович | Книга
+  2 | Петров Петр Петрович | Монитор
+  3 | Иоганн Себастьян Бах | Гитара
+(3 rows)
+```
+### Задача 5
