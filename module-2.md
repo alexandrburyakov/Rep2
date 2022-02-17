@@ -544,3 +544,28 @@ test_db=# SELECT c.id, c.last_name, o.naim FROM clients AS c INNER JOIN orders A
 (3 rows)
 ```
 ### Задача 5
+Получение полной информации по выполнению запроса выдачи всех пользователей из задачи 4.
+```
+test_db=# EXPLAIN SELECT c.id, c.last_name, o.naim FROM clients AS c INNER JOIN orders AS o ON o.id = c.order_id;
+                               QUERY PLAN                                
+-------------------------------------------------------------------------
+ Hash Join  (cost=13.15..28.47 rows=420 width=598)
+   Hash Cond: (c.order_id = o.id)
+   ->  Seq Scan on clients c  (cost=0.00..14.20 rows=420 width=86)
+   ->  Hash  (cost=11.40..11.40 rows=140 width=520)
+         ->  Seq Scan on orders o  (cost=0.00..11.40 rows=140 width=520)
+(5 rows)
+```
+
+Эта команда выводит план выполнения, генерируемый планировщиком PostgreSQL.
+По каждой операции (итерации) видно стоимость запуска иобщую стоимость выполнения.
+Ожидаемое количсество строк и среднюю длину строки в байтах. 
+Cтроки одной таблицы записываются в хеш-таблицу в памяти, после чего сканируется другая таблица
+и для каждой её строки проверяется соответствие по хеш-таблице
+
+### Задача 6
+Приведите список операций, который вы применяли для бэкапа данных и восстановления.
+```
+pg_dump -U netology -W test_db > /backup/test_db.sql
+psql -U netology -W test_db < /backup/test_db.sql
+```
