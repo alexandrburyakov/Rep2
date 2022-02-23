@@ -624,3 +624,84 @@ mysql> SELECT count(*) FROM orders WHERE price > 300;
 1 row in set (0.00 sec)
 ```
 ### Задача 2
+Создайте пользователя test в БД c паролем test-pass.
+```TEXT
+mysql> CREATE USER 'test'@'localhost' 
+    -> IDENTIFIED WITH mysql_native_password BY 'test-pass'
+    -> WITH MAX_CONNECTIONS_PER_HOUR 100
+    -> PASSWORD EXPIRE INTERVAL 180 DAY
+    -> FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 2
+    -> ATTRIBUTE '{"fname":"James", "lname":"Pretty"}';
+Query OK, 0 rows affected (0.15 sec)
+```
+Предоставьте привелегии пользователю test на операции SELECT базы test_db.
+```TEXT
+mysql> GRANT SELECT ON test_db.* TO 'test'@'localhost';
+Query OK, 0 rows affected, 1 warning (0.06 sec)
+```
+Используя таблицу INFORMATION_SCHEMA.USER_ATTRIBUTES получите данные по пользователю test
+и приведите в ответе к задаче.
+```TEXT
+mysql> SELECT * FROM INFORMATION_SCHEMA.USER_ATTRIBUTES WHERE USER='test';
++------+-----------+---------------------------------------+
+| USER | HOST      | ATTRIBUTE                             |
++------+-----------+---------------------------------------+
+| test | localhost | {"fname": "James", "lname": "Pretty"} |
++------+-----------+---------------------------------------+
+1 row in set (0.00 sec)
+```
+### Задача 3
+Исследуйте, какой engine используется в таблице БД test_db и приведите в ответе.
+```TEXT
+mysql> SELECT table_schema,table_name,engine FROM information_schema.tables WHERE table_schema="test_db";
++--------------+------------+--------+
+| TABLE_SCHEMA | TABLE_NAME | ENGINE |
++--------------+------------+--------+
+| test_db      | orders     | InnoDB |
++--------------+------------+--------+
+1 row in set (0.00 sec)
+
+Используется InnoDB.
+```
+Измените engine и приведите время выполнения и запрос на изменения из профайлера в ответе.
+```TEXT
+mysql> SET profiling = 1
+    -> ;
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> ALTER TABLE orders ENGINE = MyISAM;
+Query OK, 5 rows affected (1.67 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE orders ENGINE = InnoDB;
+Query OK, 5 rows affected (1.11 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> SHOW PROFILES;
++----------+------------+------------------------------------+
+| Query_ID | Duration   | Query                              |
++----------+------------+------------------------------------+
+|        1 | 1.67945925 | ALTER TABLE orders ENGINE = MyISAM |
+|        2 | 1.11124950 | ALTER TABLE orders ENGINE = InnoDB |
++----------+------------+------------------------------------+
+2 rows in set, 1 warning (0.00 sec)
+```
+### Задача 4
+Изучите файл my.cnf в директории /etc/mysql. Измените его согласно ТЗ (движок InnoDB).
+```TEXT
+[mysqld]
+pid-file        = /var/run/mysqld/mysqld.pid
+socket          = /var/run/mysqld/mysqld.sock
+datadir         = /var/lib/mysql
+secure-file-priv= NULL
+
+# Custom config should go here
+!includedir /etc/mysql/conf.d/
+
+innodb_flush_log_at_trx_commit = 2
+innodb_file_per_table = ON
+innodb_log_buffer_size = 1M
+# 30% RAM
+innodb_buffer_pool_size = 680M
+innodb_log_file_size = 100M
+```
