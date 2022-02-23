@@ -578,3 +578,49 @@ Cтроки одной таблицы записываются в хеш-таб�
 pg_dump -U netology -W test_db > /backup/test_db.sql
 psql -U netology -W test_db < /backup/test_db.sql
 ```
+# 6.3. MySQL
+### Задача 1
+Используя docker поднимите инстанс MySQL (версию 8). Данные БД сохраните в volume.
+```bash
+$ docker run --name mysql-netology -v /home/user/netology/6.3/data:/var/lib/mysql \
+-e MYSQL_ROOT_PASSWORD=test123 -p 3306:3306 -d mysql:8
+```
+Изучите бэкап БД и восстановитесь из него.
+```bash
+$ docker exec -i mysql-netology sh -c 'exec mysql -uroot -ptest123 test_db' < ./test_dump.sql
+```
+Перейдите в управляющую консоль mysql внутри контейнера.
+```bash
+$ docker exec -it mysql-netology mysql -u root -p
+```
+Найдите команду для выдачи статуса БД и приведите в ответе из ее вывода версию сервера БД.
+```bash
+mysql> \s
+--------------
+mysql  Ver 8.0.28 for Linux on x86_64 (MySQL Community Server - GPL)
+...
+```
+Подключитесь к восстановленной БД и получите список таблиц из этой БД.
+```bash
+mysql> use test_db
+...
+Database changed
+mysql> show tables;
++-------------------+
+| Tables_in_test_db |
++-------------------+
+| orders            |
++-------------------+
+1 row in set (0.01 sec)
+```
+Приведите в ответе количество записей с price > 300.
+```bash
+mysql> SELECT count(*) FROM orders WHERE price > 300;
++----------+
+| count(*) |
++----------+
+|        1 |
++----------+
+1 row in set (0.00 sec)
+```
+### Задача 2
