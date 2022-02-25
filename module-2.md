@@ -705,3 +705,35 @@ innodb_log_buffer_size = 1M
 innodb_buffer_pool_size = 680M
 innodb_log_file_size = 100M
 ```
+# 6.4. PostgreSQL
+### Задача 1
+Используя docker поднимите инстанс PostgreSQL (версию 13).
+```yaml
+version: "3.1"
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_PASSWORD: "test123"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    container_name: netology_psql
+    volumes:
+      - ./backup:/backup
+      - .:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: always
+```
+Подключитесь к БД PostgreSQL используя psql.
+```bash
+docker exec -it netology_psql psql -U postgres -W
+```
+Найдите и приведите управляющие команды:
+```TEXT
+- вывода списка БД: \l
+- подключения к БД: \c
+- вывода списка таблиц: \d 
+- вывода описания содержимого таблиц: \d [table name]
+- выхода из psql: \q
+```
+### Задача 2
