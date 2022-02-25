@@ -733,7 +733,33 @@ docker exec -it netology_psql psql -U postgres -W
 - вывода списка БД: \l
 - подключения к БД: \c
 - вывода списка таблиц: \d 
-- вывода описания содержимого таблиц: \d [table name]
+- вывода описания содержимого таблиц: \d 'table name'
 - выхода из psql: \q
 ```
 ### Задача 2
+Используя psql создайте БД test_database.
+```TEXT
+postgres=# CREATE DATABASE test_database;
+CREATE DATABASE
+```
+Восстановите бэкап БД в test_database.
+```TEXT
+root@ed608da00cc1:/# cd /backup
+root@ed608da00cc1:/backup# ls
+test_dump.sql
+root@ed608da00cc1:/backup# psql -U postgres -d test_database -f test_dump.sql
+```
+Подключитесь к восстановленной БД и проведите операцию ANALYZE для сбора статистики по таблице.
+```TEXT
+test_database=# ANALYZE orders;
+ANALYZE
+```
+Используя таблицу pg_stats, найдите столбец таблицы orders с наибольшим средним значением размера элементов в байтах.
+```TEXT
+test_database=# SELECT attname, avg_width FROM pg_stats WHERE tablename = 'orders' ORDER BY avg_width DESC LIMIT 1;
+ attname | avg_width 
+---------+-----------
+ title   |        16
+(1 row)
+```
+### Задача 3
