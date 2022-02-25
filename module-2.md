@@ -724,6 +724,9 @@ services:
       - "5432:5432"
     restart: always
 ```
+```bash
+docker-compose up -d
+```
 Подключитесь к БД PostgreSQL используя psql.
 ```bash
 docker exec -it netology_psql psql -U postgres -W
