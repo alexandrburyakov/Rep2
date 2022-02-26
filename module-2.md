@@ -784,3 +784,12 @@ COMMIT;
 ```
 При проектировании таблицы orders можно было изначально сделать её секционированной.
 ### Задача 4
+Используя утилиту pg_dump создайте бекап БД test_database.
+```TEXT
+root@ed608da00cc1:/backup# pg_dump -U postgres -d test_database > test_dump_new.sql
+```
+Как бы вы доработали бэкап-файл, чтобы добавить уникальность значения столбца title для таблиц test_database?
+```TEXT
+Можно добавить индекс:
+CREATE INDEX ON orders (title);
+```
