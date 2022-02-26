@@ -766,3 +766,21 @@ test_database=# SELECT attname, avg_width FROM pg_stats WHERE tablename = 'order
 (1 row)
 ```
 ### Задача 3
+Вам предложили провести разбиение таблицы на 2 (шардировать на orders_1 - price>499 и orders_2 - price<=499).
+Предложите SQL-транзакцию для проведения данной операции.
+```TEXT
+BEGIN;
+ALTER TABLE orders RENAME TO orders_old;
+CREATE TABLE orders (     
+    id integer NOT NULL,
+    title character varying(80) NOT NULL,
+    price integer DEFAULT 0
+    ) PARTITION BY RANGE (price);
+CREATE TABLE orders_1 PARTITION OF orders FOR VALUES FROM (500) TO (MAXVALUE);
+CREATE TABLE orders_2 PARTITION OF orders FOR VALUES FROM (MINVALUE) TO (499);
+INSERT INTO orders SELECT * FROM orders_old
+DROP TABLE orders_old;
+COMMIT;
+```
+При проектировании таблицы orders можно было изначально сделать её секционированной.
+### Задача 4
