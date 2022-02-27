@@ -769,20 +769,24 @@ test_database=# SELECT attname, avg_width FROM pg_stats WHERE tablename = 'order
 Вам предложили провести разбиение таблицы на 2 (шардировать на orders_1 - price>499 и orders_2 - price<=499).
 Предложите SQL-транзакцию для проведения данной операции.
 ```TEXT
-BEGIN;
-ALTER TABLE orders RENAME TO orders_old;
+ BEGIN;
+ CREATE TABLE orders_1 (CONSTRAINT price CHECK (price > 499)) INHERITS (orders);
+ CREATE TABLE orders_2 (CONSTRAINT price CHECK (price <= 499)) INHERITS (orders);
+ INSERT INTO orders_1 SELECT * FROM orders where price > 499;
+ INSERT INTO orders_2 SELECT * FROM orders where price <= 499;
+ COMMIT;
+```
+Можно ли было изначально исключить "ручное" разбиение при проектировании таблицы orders?
+```TEXT
+При проектировании таблицы orders можно было изначально сделать её секционированной.
 CREATE TABLE orders (     
     id integer NOT NULL,
     title character varying(80) NOT NULL,
     price integer DEFAULT 0
     ) PARTITION BY RANGE (price);
 CREATE TABLE orders_1 PARTITION OF orders FOR VALUES FROM (500) TO (MAXVALUE);
-CREATE TABLE orders_2 PARTITION OF orders FOR VALUES FROM (MINVALUE) TO (499);
-INSERT INTO orders SELECT * FROM orders_old
-DROP TABLE orders_old;
-COMMIT;
+CREATE TABLE orders_2 PARTITION OF orders FOR VALUES FROM (MINVALUE) TO (500);
 ```
-При проектировании таблицы orders можно было изначально сделать её секционированной.
 ### Задача 4
 Используя утилиту pg_dump создайте бекап БД test_database.
 ```TEXT
@@ -790,6 +794,7 @@ root@ed608da00cc1:/backup# pg_dump -U postgres -d test_database > test_dump_new.
 ```
 Как бы вы доработали бэкап-файл, чтобы добавить уникальность значения столбца title для таблиц test_database?
 ```TEXT
-Можно добавить индекс:
-CREATE INDEX ON orders (title);
+ALTER TABLE orders ADD UNIQUE (title);
+ALTER TABLE orders_1 ADD UNIQUE (title);
+ALTER TABLE orders_2 ADD UNIQUE (title);
 ```
