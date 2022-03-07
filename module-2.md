@@ -931,3 +931,59 @@ curl -X DELETE 'http://localhost:9200/ind-1?pretty'
 ```
 
 ### Задача 3
+Приведите в ответе запрос API и результат вызова API для создания репозитория.
+```TEXT
+$ curl -X PUT "localhost:9200/_snapshot/netology_backup?pretty" -H 'Content-Type: application/json' -d'
+> {
+>   "type": "fs",
+>   "settings": {
+>     "location": "/opt/elasticsearch/snapshots"
+>   }
+> }
+> '
+{
+  "acknowledged" : true
+}
+```
+Создайте индекс test с 0 реплик и 1 шардом и приведите в ответе список индексов.
+```TEXT
+$ curl -X PUT "localhost:9200/test?pretty" -H 'Content-Type: application/json' -d'
+> {
+>   "settings": {
+>     "number_of_shards": 1,
+>     "number_of_replicas": 0
+>   }
+> }
+> '
+{
+  "acknowledged" : true,
+  "shards_acknowledged" : true,
+  "index" : "test"
+}
+$ curl -X GET 'http://localhost:9200/_cat/indices?v'
+health status index            uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+green  open   .geoip_databases p1rfLFs1RJOET0RNOVh6NQ   1   0         41            0     39.5mb         39.5mb
+green  open   test             DiPLU5ZTS9m64LHU0ara8g   1   0          0            0       226b           226b
+```
+Создайте snapshot состояния кластера elasticsearch.
+```TEXT
+curl -X PUT "localhost:9200/_snapshot/netology_backup/my_snapshot?wait_for_completion=true&pretty"
+```
+Приведите в ответе список файлов в директории со snapshotами.
+```TEXT
+$docker exec netology_elasticsearch ls -l /opt/elasticsearch/snapshots
+total 48
+-rw-r--r-- 1 elasticsearch elasticsearch  1423 Mar  7 21:29 index-0
+-rw-r--r-- 1 elasticsearch elasticsearch     8 Mar  7 21:29 index.latest
+drwxr-xr-x 6 elasticsearch elasticsearch  4096 Mar  7 21:29 indices
+-rw-r--r-- 1 elasticsearch elasticsearch 29277 Mar  7 21:29 meta-E6Fo2m1yRzOM_iTatPJgPA.dat
+-rw-r--r-- 1 elasticsearch elasticsearch   710 Mar  7 21:29 snap-E6Fo2m1yRzOM_iTatPJgPA.dat
+```
+Удалите индекс test и создайте индекс test-2. Приведите в ответе список индексов.
+```TEXT
+
+```
+Приведите в ответе запрос к API восстановления и итоговый список индексов.
+```TEXT
+
+```
