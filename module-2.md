@@ -798,3 +798,136 @@ ALTER TABLE orders ADD UNIQUE (title);
 ALTER TABLE orders_1 ADD UNIQUE (title);
 ALTER TABLE orders_2 ADD UNIQUE (title);
 ```
+# 6.5. Elasticsearch
+### Задача 1
+Текст Dockerfile манифеста.
+```TEXT
+FROM centos:7
+
+ENV ES_DISTR="/opt/elasticsearch"
+ENV ES_HOME="${ES_DISTR}/elasticsearch-7.17.1"
+ENV ES_DATA_DIR="/var/lib/data"
+ENV ES_LOG_DIR="/var/lib/logs"                                                                                                                                                                             $
+ENV ES_JAVA_OPTS="-Xms512m -Xmx512m"
+
+WORKDIR "${ES_DISTR}"
+
+RUN yum install wget -y
+
+RUN yum install perl-Digest-SHA -y
+
+RUN wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.17.1-linux-x86_64.tar.gz && \
+    wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.17.1-linux-x86_64.tar.gz.sha512 && \
+    shasum -a 512 -c elasticsearch-7.17.1-linux-x86_64.tar.gz.sha512 && \
+    tar -xzf elasticsearch-7.17.1-linux-x86_64.tar.gz
+
+COPY elasticsearch.yml ${ES_HOME}/config
+
+ENV ES_USER="elasticsearch"
+
+RUN useradd ${ES_USER}
+
+RUN mkdir -p "${ES_DATA_DIR}" && \
+    mkdir -p "${ES_LOG_DIR}" && \                                                                                                                 
+    chown -R ${ES_USER}: "${ES_DISTR}" && \
+    chown -R ${ES_USER}: "${ES_DATA_DIR}" && \
+    chown -R ${ES_USER}: "${ES_LOG_DIR}"
+
+USER ${ES_USER}
+
+WORKDIR "${ES_HOME}"
+
+EXPOSE 9200
+EXPOSE 9300
+
+ENTRYPOINT ["./bin/elasticsearch"]
+```
+```TEXT
+discovery.type: single-node
+
+cluster.name: netology_elasticsearch
+
+node.name: netology_test
+
+path.data: /var/lib/data
+
+path.logs: /var/lib/logs
+
+network.host: 0.0.0.0
+```
+Cсылка на образ в репозитории dockerhub: https://hub.docker.com/r/alexandrburyakov/nelology_elasticsearch
+
+Ответ elasticsearch на запрос пути / в json виде.
+```TEXT
+$ curl localhost:9200/
+{
+  "name" : "netology_test",
+  "cluster_name" : "netology_elasticsearch",
+  "cluster_uuid" : "EFdc4HD8SJSGqvbWmLf-7A",
+  "version" : {
+    "number" : "7.17.1",
+    "build_flavor" : "default",
+    "build_type" : "tar",
+    "build_hash" : "e5acb99f822233d62d6444ce45a4543dc1c8059a",
+    "build_date" : "2022-02-23T22:20:54.153567231Z",
+    "build_snapshot" : false,
+    "lucene_version" : "8.11.1",
+    "minimum_wire_compatibility_version" : "6.8.0",
+    "minimum_index_compatibility_version" : "6.0.0-beta1"
+  },
+  "tagline" : "You Know, for Search"
+}
+```
+### Задача 2
+```TEXT
+curl -X PUT "localhost:9200/ind-1?pretty" -H 'Content-Type: application/json' -d'
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0
+  }
+}
+'
+...
+```
+Получите список индексов и их статусов, используя API и приведите в ответе на задание.
+```TEXT
+$ curl -X GET 'http://localhost:9200/_cat/indices?v'
+health status index            uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+green  open   .geoip_databases YD8KrFPSQTWhj6ctc7Vuuw   1   0         41            0     39.5mb         39.5mb
+green  open   ind-1            SVP0iPgiSEKBz25loNfCmw   1   0          0            0       226b           226b
+yellow open   ind-3            Ub-phIL9T6uoRQFbKpVBlQ   4   2          0            0       904b           904b
+yellow open   ind-2            x1t4trJdQ9CNVmtdR6D2uQ   2   1          0            0       452b           452b
+```
+Получите состояние кластера elasticsearch, используя API.
+```TEXT
+curl -XGET localhost:9200/_cluster/health/?pretty=true
+{
+  "cluster_name" : "netology_elasticsearch",
+  "status" : "yellow",
+  "timed_out" : false,
+  "number_of_nodes" : 1,
+  "number_of_data_nodes" : 1,
+  "active_primary_shards" : 10,
+  "active_shards" : 10,
+  "relocating_shards" : 0,
+  "initializing_shards" : 0,
+  "unassigned_shards" : 10,
+  "delayed_unassigned_shards" : 0,
+  "number_of_pending_tasks" : 0,
+  "number_of_in_flight_fetch" : 0,
+  "task_max_waiting_in_queue_millis" : 0,
+  "active_shards_percent_as_number" : 50.0
+}
+```
+Как вы думаете, почему часть индексов и кластер находится в состоянии yellow?
+```TEXT
+Два индекса находятся в состоянии yellow, так как у них есть реплики, а учитывая, что в нашем кластере
+всего одна нода - эти реплики некуда размещать.
+```
+```TEXT
+curl -X DELETE 'http://localhost:9200/ind-1?pretty'
+...
+```
+
+### Задача 3
