@@ -807,7 +807,8 @@ FROM centos:7
 ENV ES_DISTR="/opt/elasticsearch"
 ENV ES_HOME="${ES_DISTR}/elasticsearch-7.17.1"
 ENV ES_DATA_DIR="/var/lib/data"
-ENV ES_LOG_DIR="/var/lib/logs"                                                                                                                                                                             $
+ENV ES_LOG_DIR="/var/lib/logs"
+ENV ES_BACKUP="/opt/elasticsearch/snapshots"                                                                                                                                                               $
 ENV ES_JAVA_OPTS="-Xms512m -Xmx512m"
 
 WORKDIR "${ES_DISTR}"
@@ -828,9 +829,11 @@ ENV ES_USER="elasticsearch"
 RUN useradd ${ES_USER}
 
 RUN mkdir -p "${ES_DATA_DIR}" && \
-    mkdir -p "${ES_LOG_DIR}" && \                                                                                                                 
+    mkdir -p "${ES_LOG_DIR}" && \
+    mkdir -p "${ES_BACKUP}" && \
     chown -R ${ES_USER}: "${ES_DISTR}" && \
     chown -R ${ES_USER}: "${ES_DATA_DIR}" && \
+    chown -R ${ES_USER}: "${ES_BACKUP}" && \
     chown -R ${ES_USER}: "${ES_LOG_DIR}"
 
 USER ${ES_USER}
@@ -852,6 +855,8 @@ node.name: netology_test
 path.data: /var/lib/data
 
 path.logs: /var/lib/logs
+
+path.repo: /opt/elasticsearch/snapshots
 
 network.host: 0.0.0.0
 ```
@@ -981,9 +986,30 @@ drwxr-xr-x 6 elasticsearch elasticsearch  4096 Mar  7 21:29 indices
 ```
 Удалите индекс test и создайте индекс test-2. Приведите в ответе список индексов.
 ```TEXT
-
+$curl -X DELETE 'http://localhost:9200/test?pretty'
+{
+  "acknowledged" : true
+}
+$ curl -X PUT "localhost:9200/test-2?pretty" -H 'Content-Type: application/json' -d'
+$ curl -X GET 'http://localhost:9200/_cat/indices?v'
+health status index            uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+green  open   .geoip_databases p1rfLFs1RJOET0RNOVh6NQ   1   0         41            0     39.5mb         39.5mb
+green  open   test-2           4jS_RrJBSwqbmcHSIxzMuw   1   0          0            0       226b           226b
 ```
 Приведите в ответе запрос к API восстановления и итоговый список индексов.
 ```TEXT
-
+$ curl -X POST localhost:9200/_snapshot/netology_backup/my_snapshot/_restore?pretty -H 'Content-Type: application/json' -d'                              
+> {
+>   "indices": "test",
+>   "include_global_state":true
+> }
+> '
+{
+  "accepted" : true
+}
+$ curl -X GET 'http://localhost:9200/_cat/indices?v'
+health status index            uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+green  open   .geoip_databases 0WcC_W1UQTatrDoRc9K6lA   1   0         41            0     39.5mb         39.5mb
+green  open   test-2           4jS_RrJBSwqbmcHSIxzMuw   1   0          0            0       226b           226b
+green  open   test             N1BunjXoQJSVNWKoZLQNTw   1   0          0            0       226b           226b
 ```
