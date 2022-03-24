@@ -1073,27 +1073,28 @@ green  open   test             N1BunjXoQJSVNWKoZLQNTw   1   0          0        
 ### Задача 1
 Какой тип инфраструктуры будем использовать для этого проекта: изменяемый или не изменяемый?
 ```TEXT
-
+Не изменяемый, на основе образов, подготовленных с помощью Packer.
 ```
 Будет ли центральный сервер для управления инфраструктурой?
 ```TEXT
-
+Нет. Так как будем использовать инструменты, которые не требуют сервера: Packer, Terraform, Ansible.
+Однако, код инфраструктуры будет хранится на сервере (git).
 ```
 Будут ли агенты на серверах?
 ```TEXT
-
+Нет. Можно использовать ssh.
 ```
 Будут ли использованы средства для управления конфигурацией или инициализации ресурсов?
 ```TEXT
-
+Да. Terraform, который уже используется.
 ```
 Какие инструменты из уже используемых вы хотели бы использовать для нового проекта?
 ```TEXT
-
+Packer, Terraform, Ansible, Docker, Kubernetes.
 ```
 Хотите ли рассмотреть возможность внедрения новых инструментов для этого проекта?
 ```TEXT
-
+Да. Рассмотрел бы внедерение Jenkins.
 ```
 ### Задача 2
 ```bash
@@ -1102,3 +1103,15 @@ Terraform v1.1.7
 on linux_amd64
 ```
 ### Задача 3
+Скачал и распаковал бинарник более ранней версии 1.0.11
+```bash
+user@user-Aspire-F5-573G:~/Загрузки/terraform_1.0.11_linux_amd64$ terraform --version
+Terraform v1.1.7
+on linux_amd64
+user@user-Aspire-F5-573G:~/Загрузки/terraform_1.0.11_linux_amd64$ terraform_1011 --version
+Terraform v1.0.11
+on linux_amd64
+
+Your version of Terraform is out of date! The latest version
+is 1.1.7. You can update by downloading from https://www.terraform.io/downloads.html
+```
