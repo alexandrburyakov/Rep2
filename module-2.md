@@ -1115,3 +1115,9 @@ on linux_amd64
 Your version of Terraform is out of date! The latest version
 is 1.1.7. You can update by downloading from https://www.terraform.io/downloads.html
 ```
+# 09.02 CI\CD
+### Знакомоство с SonarQube
+
+### Знакомство с Nexus
+
+### Знакомство с Maven
