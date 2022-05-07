@@ -1117,8 +1117,8 @@ is 1.1.7. You can update by downloading from https://www.terraform.io/downloads.
 ```
 # 09.02 CI\CD
 ### Знакомство с SonarQube
-![](/home/user/PycharmProjects/Rep2/images/sonar_qube.png)
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/sonar_qube.png)
 ### Знакомство с Nexus
-[maven-metadata.xml](/home/user/netology/9.2/maven-metadata.xml)
+[maven-metadata.xml](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/maven-metadata.xml)
 ### Знакомство с Maven
-[pom.xml](/home/user/netology/9.2/pom.xml)
+[pom.xml](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/pom.xml)
