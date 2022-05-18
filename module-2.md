@@ -1286,3 +1286,4 @@ while (index < 10):
 ```
 Ещё раз запускаем анализатор и смотрим результат в интерфейсе:
 ![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/sonar_qube_3.png)
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/sonar_qube_4.png)
