@@ -1135,7 +1135,7 @@ af1deb07a0cb   sonarqube:8.7-community   "bin/run.sh bin/sona…"   2 minutes ag
 ```
 Проверяем готовность сервиса через браузер, входим под admin/admin, меняем пароль, создаем новый проект (netology), получаем токен,
 cкачиваем пакет sonar-scanner, который нам предлагает скачать сам sonarqube:
-![](/home/user/PycharmProjects/Rep2/images/Sonar_qube_1.png)
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/Sonar_qube_1.png)
 Делаем так, чтобы binary был доступен через вызов в shell (меняем переменную PATH), проверяем:
 ```bash
 user@user-Aspire-F5-573G:~/netology/9.2$ sonar-scanner --version
@@ -1268,7 +1268,7 @@ INFO: Final Memory: 7M/30M
 INFO: ------------------------------------------------------------------------
 ```
 Смотрим результат в интерфейсе
-![](/home/user/PycharmProjects/Rep2/images/sonar_qube_2.png)
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/sonar_qube_2.png)
 Исправляем файл
 ```TEXT
 def increment(index):
@@ -1285,4 +1285,4 @@ while (index < 10):
     print(get_square(index))
 ```
 Ещё раз запускаем анализатор и смотрим результат в интерфейсе:
-![](/home/user/PycharmProjects/Rep2/images/sonar_qube_3.png)
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/sonar_qube_3.png)
