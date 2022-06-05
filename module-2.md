@@ -1294,3 +1294,18 @@ while (index < 10):
 Ещё раз запускаем анализатор и смотрим результат в интерфейсе:
 ![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/sonar_qube_3.png)
 ![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/sonar_qube_4.png)
+
+# 09.01 Жизненный цикл ПО
+### В рамках основной части необходимо создать собственные workflow для двух типов задач: bug и остальные типы задач.
+#### Workflow for bug
+![](/home/user/PycharmProjects/Rep2/images/bug_workflow.png)
+#### Workflow для остальных типов задач
+![](/home/user/PycharmProjects/Rep2/images/workflow.png)
+### Проведение задач по статусам в kanban
+![](/home/user/PycharmProjects/Rep2/images/desk_kanban.png)
+### Проведение задач по статусам в scrum
+![](/home/user/PycharmProjects/Rep2/images/desk_sprint.png)
+### Если всё отработало в рамках ожидания - выгрузить схемы workflow для импорта в XML. Файлы с workflow приложить к решению задания.
+[bug_workflow.xml](/home/user/PycharmProjects/Rep2/images/bug_workflow.xml)
+
+[workflow.xml](/home/user/PycharmProjects/Rep2/images/workflow.xml)
