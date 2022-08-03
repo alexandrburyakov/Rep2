@@ -1309,3 +1309,77 @@ while (index < 10):
 [bug_workflow.xml](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/bug_workflow.xml)
 
 [workflow.xml](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/images/workflow.xml)
+
+# 7.5. Основы golang
+### Задача 1. Установите golang.
+```commandline
+~$ go version
+go version go1.19 linux/amd64
+```
+### Задача 2. Знакомство с gotour.
+
+Выполнено
+
+### Задача 3. Написание кода.
+#### 1. Напишите программу для перевода метров в футы (1 фут = 0.3048 метр). 
+```Text
+package main
+
+import "fmt"
+
+func MtoFoot(input float64) float64 {
+ return input * 3.2808
+}
+
+func main() {
+	fmt.Print("Enter a number: ")
+	var input float64
+	fmt.Scanf("%f", &input)
+	output := MtoFoot(input)
+	fmt.Println(output)
+}
+```
+#### 2. Напишите программу, которая найдет наименьший элемент в любом заданном списке.
+```text
+package main
+
+import "fmt"
+
+func main() {
+        x := []int{48, 96, 86, 68, 57, 82, 63, 70, 37, 34, 83, 27, 19, 97, 9, 17}
+        min := FindMin(x)
+        fmt.Printf("Наименьший элемент: %d\n", min)
+}
+
+func FindMin(array []int) int {
+        min := array[0]
+        for _, v := range array {
+                if v < min {
+                        min = v
+                }
+        }
+        return min
+}
+```
+#### 3. Напишите программу, которая выводит числа от 1 до 100, которые делятся на 3.
+```text
+package main
+
+import "fmt"
+
+func main() {
+    filtered := filter()
+    fmt.Printf("%v\n", filtered)
+}
+
+func filter() []int {
+        var threes []int
+        for i := 1; i < 100; i++ {
+                if i % 3 == 0 {
+            threes = append(threes, i)
+                }
+        }
+        return threes
+}
+
+```
