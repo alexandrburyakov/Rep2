@@ -1383,3 +1383,22 @@ func filter() []int {
 }
 
 ```
+# 7.6. Написание собственных провайдеров для Terraform.
+### Задача 1.
+#### 1. Найдите, где перечислены все доступные resource и data_source, приложите ссылку на эти строки в коде на гитхабе.
+resource
+https://github.com/hashicorp/terraform-provider-aws/blob/main/internal/provider/provider.go#L913
+
+data_source
+https://github.com/hashicorp/terraform-provider-aws/blob/main/internal/provider/provider.go#L413
+#### 2. Для создания очереди сообщений SQS используется ресурс aws_sqs_queue у которого есть параметр name.
+#### С каким другим параметром конфликтует name? Приложите строчку кода, в которой это указано.
+`name` конфликтует с `name_prefix`: https://github.com/hashicorp/terraform-provider-aws/blob/main/internal/service/sqs/queue.go#L87
+#### Какая максимальная длина имени?
+80 символов (причем для fifo очереди - 75 символов, плюс расширение `.fifo`, в сумме - 80.) 
+
+https://github.com/hashicorp/terraform-provider-aws/blob/main/internal/service/sqs/queue.go#L424
+#### Какому регулярному выражению должно подчиняться имя?
+`^[a-zA-Z0-9_-]{1,75}\.fifo$` - для fifo очереди
+
+`^[a-zA-Z0-9_-]{1,80}$` - иначе
