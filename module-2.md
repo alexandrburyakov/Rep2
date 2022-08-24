@@ -1880,7 +1880,7 @@ Releasing state lock. This may take a few moments...
 ```
 # 7.4. Средства командной работы над инфраструктурой.
 ### Задача 2. Написать серверный конфиг для атлантиса.
-1. [atlantis.yml]()
-2. [server.yaml]()
+1. [atlantis.yml](https://raw.githubusercontent.com/alexandrburyakov/devops-netology/blob/main/atlantis.yaml)
+2. [server.yaml](https://raw.githubusercontent.com/alexandrburyakov/devops-netology/blob/main/server.yaml)
 ### Задача 3. Знакомство с каталогом модулей.
-[Configuration]()
+[Configuration](https://raw.githubusercontent.com/alexandrburyakov/devops-netology/tree/main/terraform_74)
