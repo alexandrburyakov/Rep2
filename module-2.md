@@ -1887,7 +1887,7 @@ Releasing state lock. This may take a few moments...
 
 # Дипломный практикум в YandexCloud.
 ### 1. Репозиторий со всеми Terraform манифестами и готовность продемонстрировать создание всех ресурсов с нуля.
-[Репозиторий Terraform](https://github.com/alexandrburyakov/devops-netology/tree/main/terraform_74)
+[Репозиторий Terraform](https://github.com/alexandrburyakov/Rep2/tree/master/terraform)
 #### Запуск Terraform
 1. Выполняем `terraform init`
 ```TEXT
