@@ -1945,7 +1945,7 @@ Apply complete! Resources: 18 added, 0 changed, 0 destroyed.
 ...
 ```
 ### 2. Репозиторий со всеми Ansible ролями и готовность продемонстрировать установку всех сервисов с нуля.
-[Репозиторий Ansible](https://github.com/alexandrburyakov/devops-netology/tree/main/terraform_74)
+[Репозиторий Ansible](https://github.com/alexandrburyakov/Rep2/tree/master/ansible)
 #### Запуск Ansible
 1. Запускаем роль для основного сервера:
 ```text
