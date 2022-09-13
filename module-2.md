@@ -1884,3 +1884,152 @@ Releasing state lock. This may take a few moments...
 2. [server.yaml](https://github.com/alexandrburyakov/devops-netology/blob/main/server.yaml)
 ### Задача 3. Знакомство с каталогом модулей.
 [Configuration](https://github.com/alexandrburyakov/devops-netology/tree/main/terraform_74)
+
+# Дипломный практикум в YandexCloud.
+### 1. Репозиторий со всеми Terraform манифестами и готовность продемонстрировать создание всех ресурсов с нуля.
+[Репозиторий Terraform](https://github.com/alexandrburyakov/devops-netology/tree/main/terraform_74)
+#### Запуск Terraform
+1. Выполняем `terraform init`
+```TEXT
+terraform init
+
+
+Initializing Terraform Cloud...
+
+Initializing provider plugins...
+- Finding yandex-cloud/yandex versions matching "0.75.0"...
+- Installing yandex-cloud/yandex v0.75.0...
+- Installed yandex-cloud/yandex v0.75.0 (self-signed, key ID E40F590B50BB8E40)
+
+...
+
+Terraform Cloud has been successfully initialized!
+
+You may now begin working with Terraform Cloud. Try running "terraform plan" to
+see any changes that are required for your infrastructure.
+
+If you ever set or change modules or Terraform Settings, run "terraform init"
+again to reinitialize your working directory.
+```
+2. Выполняем `terraform validate`:
+```TEXT
+terraform validate
+
+Success! The configuration is valid.
+```
+3. В Terraform Cloud добавляем переменные окружения:
+```text
+TF_VAR_YANDEX_TOKEN — по инструкции.
+TF_VAR_SSH_ID_RSA_PUB — копируем из cat ~/.ssh/id_rsa.pub.
+```
+4. Выполняем `terraform plan`:
+```text
+...
+Plan: 18 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + app_aburyakov_ru_ip_addr_internal        = (known after apply)
+  + db01_aburyakov_ru_ip_addr_internal       = (known after apply)
+  + db02_aburyakov_ru_ip_addr_internal       = (known after apply)
+  + gitlab_aburyakov_ru_ip_addr_internal     = (known after apply)
+  + host_aburyakov_ru_ip_addr_external       = (known after apply)
+  + monitoring_aburyakov_ru_ip_addr_internal = (known after apply)
+  + ssh_config                               = (known after apply)
+```
+5. Выполнем `terraform apply --auto-approve`:
+```text
+terraform apply --auto-approve
+
+...
+Apply complete! Resources: 18 added, 0 changed, 0 destroyed.
+...
+```
+### 2. Репозиторий со всеми Ansible ролями и готовность продемонстрировать установку всех сервисов с нуля.
+[Репозиторий Ansible](https://github.com/alexandrburyakov/devops-netology/tree/main/terraform_74)
+#### Запуск Ansible
+1. Запускаем роль для основного сервера:
+```text
+ansible-playbook roles/entrance/tasks/main.yml
+
+...
+PLAY RECAP ************************************************************************************************************
+
+aburyakov.ru              : ok=28   changed=25   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+```
+2. Запусаем роль кластера MySQL:
+```text
+ansible-playbook db/tasks/main.yml
+
+...
+PLAY RECAP ************************************************************************************************************
+db01.aburyakov.ru         : ok=27   changed=21   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+db02.aburyakov.ru         : ok=22   changed=18   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0 
+```
+3. Запусаем роль для WordPress:
+```text
+ansible-playbook app/tasks/main.yml 
+
+...
+PLAY RECAP ************************************************************************************************************
+app.aburyakov.ru          : ok=26   changed=23   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0  
+```
+4. Запускаем роль для Prometheus, Alert Manager и Grafana:
+```text
+ansible-playbook monitoring/tasks/main.yml 
+
+...
+PLAY RECAP ************************************************************************************************************
+monitoring.aburyakov.ru   : ok=15   changed=13   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0  
+```
+5. Запускаем роль для Gitlab и Runner:
+```text
+ansible-playbook gitlab/tasks/main.yml 
+
+...
+PLAY RECAP ************************************************************************************************************
+monitoring.aburyakov.ru   : ok=15   changed=13   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0  
+```
+6. Создаем новый `gitlab-runner`:
+```text
+gitlab-runner register
+...
+```
+7. В Wordpress-проекте создаем pipeline-файл .gitlab-ci.yml:
+```text
+before_script:
+  - eval $(ssh-agent -s)
+  - echo "$ssh_key" | tr -d '\r' | ssh-add -
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+
+deploy-job:
+  stage: deploy
+  script:
+    - echo "Deploy" 
+    # Upload to server
+    - rsync -vz -e "ssh -o StrictHostKeyChecking=no" ./* /var/www/wordpress/
+    - ssh -o StrictHostKeyChecking=no rm -rf /var/www/wordpress/.git
+    # Provide file permissions
+    - ssh -o StrictHostKeyChecking=no sudo chown -R www-data /var/www/wordpress/ 
+```
+8. Добавляем .git-репозиторий для Wordpress-проекта:
+```text
+git init
+git remote add origin http://gitlab.aburyakov.ru/gitlab-instance-824fbaf0/wordpress.git
+git add .
+git commit -m "Initial commit"
+git push -u origin master
+```
+### 3. Скриншоты веб-интерфейсов всех сервисов работающих по HTTPS на вашем доменном имени.
+aburyakov.ru
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/img/wp-main.jpg)
+gitlab.aburyakov.ru
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/img/gitlab-project.jpg)
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/img/gitlab-runner.jpg)
+grafana.aburyakov.ru
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/img/grafana-dashboard.jpg)
+prometheus.aburyakov.ru
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/img/prometheus-metrics.jpg)
+alertmanager.aburyakov.ru
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/img/alertmanager-status.jpg)
+
