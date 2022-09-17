@@ -2026,7 +2026,7 @@ aburyakov.ru
 ![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/img/wp-main.jpg)
 gitlab.aburyakov.ru
 ![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/img/gitlab-project.jpg)
-![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/img/gitlab-runner.png)
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/img/gitlab_runner.png)
 grafana.aburyakov.ru
 ![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/img/grafana-dashboard.jpg)
 prometheus.aburyakov.ru
