@@ -1886,7 +1886,7 @@ Releasing state lock. This may take a few moments...
 [Configuration](https://github.com/alexandrburyakov/devops-netology/tree/main/terraform_74)
 
 # Дипломный практикум в YandexCloud. (С доработкой)
-## Доработка: Был приложен не тот скриншот с раннером. Обновил на новый.
+# Доработка: Был приложен не тот скриншот с раннером. Обновил на новый.
 ### 1. Репозиторий со всеми Terraform манифестами и готовность продемонстрировать создание всех ресурсов с нуля.
 [Репозиторий Terraform](https://github.com/alexandrburyakov/Rep2/tree/master/terraform)
 #### Запуск Terraform
