@@ -1885,7 +1885,8 @@ Releasing state lock. This may take a few moments...
 ### Задача 3. Знакомство с каталогом модулей.
 [Configuration](https://github.com/alexandrburyakov/devops-netology/tree/main/terraform_74)
 
-# Дипломный практикум в YandexCloud.
+# Дипломный практикум в YandexCloud. (С доработкой)
+### Доработка: Был приложен не тот скриншот с раннером. Обновил на новый.
 ### 1. Репозиторий со всеми Terraform манифестами и готовность продемонстрировать создание всех ресурсов с нуля.
 [Репозиторий Terraform](https://github.com/alexandrburyakov/Rep2/tree/master/terraform)
 #### Запуск Terraform
@@ -2025,7 +2026,7 @@ aburyakov.ru
 ![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/img/wp-main.jpg)
 gitlab.aburyakov.ru
 ![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/img/gitlab-project.jpg)
-![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/img/gitlab-runner.jpg)
+![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/img/gitlab-runner.png)
 grafana.aburyakov.ru
 ![](https://raw.githubusercontent.com/alexandrburyakov/Rep2/master/img/grafana-dashboard.jpg)
 prometheus.aburyakov.ru
